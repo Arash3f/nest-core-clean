@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from "@nestjs/swagger"
 import { IsNumber, Max, Min } from "class-validator"
 
 /**
- * * Data transfer object for Pagination Input
+ * * Data transfer object for Pagination
  */
 export class PaginationDto {
   /**
@@ -29,24 +29,4 @@ export class PaginationDto {
   @Min(0)
   @IsNumber()
   skip?: number = 0
-
-  /**
-   * The internal function that prepares the final object for pagination filter, used when working with Prisma
-   * @returns pagination object
-   * @example
-   * In Auth module --> service.ts
-   * ```ts
-   * const entity = this.prisma.users.findMany({
-   * 		where: whereClause,
-   * 		...input?.sortBy?.convertToPrismaFilter(),
-   * 		...input?.pagination?.convertToPrismaFilter()
-   * })
-   * ```
-   */
-  convertToPrismaFilter() {
-    return {
-      take: this.take,
-      skip: this.skip,
-    }
-  }
 }

@@ -1,12 +1,9 @@
 import { ApiResponseProperty } from "@nestjs/swagger"
 
 /**
- * * Data transfers object to Link Output
+ * * Data transfers object to Link
  */
 export class LinkDto {
-  /**
-   * response url link field
-   */
   @ApiResponseProperty({ type: String })
   url: string
 }

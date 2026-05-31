@@ -9,6 +9,14 @@ import type { Request } from "express"
 import type { ServerResponse } from "http"
 import { AppModule } from "src/app.module"
 
+/**
+ * Webpack Hot Module Replacement (HMR) contract for Node.js bundles.
+ *
+ * @remarks
+ * When HMR is enabled, Webpack injects a `module.hot` object that can:
+ * - accept updated modules without restarting the process
+ * - run cleanup logic before replacing the current module
+ */
 interface HotModule {
   hot: {
     accept: () => void
@@ -26,10 +34,20 @@ async function bootstrap() {
   setupCors(app)
   setupLogger(app, configService)
 
+  /**
+   * Trust the first proxy hop.
+   *
+   * @remarks
+   * Useful when running behind a reverse proxy (e.g., Nginx) so that
+   * `req.ip` and related fields can be resolved correctly.
+   */
   app.set("trust proxy", 1)
 
   await app.listen(configService.serverPort, configService.serverAddress)
 
+  /**
+   * HMR support (development only).
+   */
   if (module.hot) {
     module.hot.accept()
     module.hot.dispose(() => app.close())
@@ -38,6 +56,16 @@ async function bootstrap() {
   return app
 }
 
+/**
+ * Configures NestJS logger levels based on the runtime environment.
+ *
+ * @param app - NestJS application instance.
+ * @param configService - Configuration provider.
+ *
+ * @remarks
+ * - Development: enables detailed logs.
+ * - Other environments: restricts output to warnings/errors.
+ */
 function setupLogger(app: NestExpressApplication, configService: EnvConfigService) {
   app.useLogger(
     configService.nodeEnv === NodeEnv.Development
@@ -46,6 +74,19 @@ function setupLogger(app: NestExpressApplication, configService: EnvConfigServic
   )
 }
 
+/**
+ * Configures Swagger (OpenAPI) for the application.
+ *
+ * @param app - NestJS application instance.
+ * @param configService - Configuration provider.
+ *
+ * @remarks
+ * Exposes:
+ * - Swagger UI at `configService.swaggerPath`
+ * - Raw OpenAPI JSON at `/{configService.swaggerDocsPath}`
+ *
+ * @returns The generated OpenAPI document.
+ */
 function setupSwagger(app: NestExpressApplication, configService: EnvConfigService) {
   const config = new DocumentBuilder()
     .setTitle("My Project APIs")
@@ -66,10 +107,25 @@ function setupSwagger(app: NestExpressApplication, configService: EnvConfigServi
   return document
 }
 
+/**
+ * Enables Cross-Origin Resource Sharing (CORS).
+ *
+ * @param app - NestJS application instance.
+ */
 function setupCors(app: NestExpressApplication) {
   app.enableCors()
 }
 
+/**
+ * Applies global validation pipeline and exception filter.
+ *
+ * @param app - NestJS application instance.
+ * @param configService - Configuration provider.
+ *
+ * @remarks
+ * - `transform: true` converts input payloads to DTO instances/types.
+ * - `whitelist: true` removes unknown properties not present on the DTO.
+ */
 function setupGlobalValidation(app: NestExpressApplication, configService: EnvConfigService) {
   app.useGlobalFilters(new CoreExceptionFilter(configService))
   app.useGlobalPipes(

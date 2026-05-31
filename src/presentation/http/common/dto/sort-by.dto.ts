@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from "@nestjs/swagger"
 import { IsBoolean, IsOptional, IsString } from "class-validator"
 
 /**
- * * Data transfer object for Sort By Input
+ * * Data transfer object for Sort By
  */
 export class SortByDto {
   /**
@@ -20,25 +20,4 @@ export class SortByDto {
   @IsOptional()
   @IsBoolean()
   descending = true
-
-  /**
-   * The internal function that prepares the final object for pagination filter, when working with prisma
-   * @returns pagination object
-   * @example
-   * In Auth module --> service.ts
-   * ```ts
-   * const entity = this.prisma.users.findMany({
-   * 		where: whereClause,
-   * 		...input?.sortBy?.convertToPrismaFilter(),
-   * 		...input?.pagination?.convertToPrismaFilter()
-   * })
-   * ```
-   */
-  convertToPrismaFilter() {
-    const result: { orderBy: Record<string, "asc" | "desc"> } = { orderBy: {} }
-
-    if (this.field) result.orderBy[this.field] = this.descending ? "desc" : "asc"
-
-    return result
-  }
 }

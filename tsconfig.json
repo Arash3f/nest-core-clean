@@ -33,7 +33,12 @@
   },
   "typedocOptions": {
     "out": "doc",
-    "exclude": "**/node_modules/**"
+    "exclude": "**/node_modules/**",
+    "markdownItOptions": {
+      "html": true,
+      "linkify": true,
+      "typographer": true
+    }
   },
   "include": [
     "src/**/*",

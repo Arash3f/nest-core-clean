@@ -9,6 +9,13 @@ import { UserHttpModule } from "@presentation/http/modules/user/user.module"
   imports: [InfrastructureModule, AuthHttpModule, UserHttpModule],
   providers: [
     {
+      /**
+       * Registers {@link TokenGuard} as a global application guard.
+       *
+       * @remarks
+       * By using {@link APP_GUARD}, the guard is applied to all routes unless
+       * explicitly bypassed or overridden.
+       */
       provide: APP_GUARD,
       useClass: TokenGuard,
     },

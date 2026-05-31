@@ -9,15 +9,13 @@
     "prepare": "husky",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix -f stylish",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "studio:dev": "env-cmd -f ./.env.dev pnpm prisma studio",
+    "prisma:studio:dev": "env-cmd -f ./.env.dev pnpm prisma studio",
     "prisma:generate:dev": "env-cmd -f ./.env.dev prisma generate",
     "prisma:migrate:dev": "env-cmd -f ./.env.dev prisma migrate dev --name init",
     "prisma:push:dev": "env-cmd -f ./.env.dev prisma db push",
     "start:build": "env-cmd -f ./.env.prod nest build",
     "start:prod": "env-cmd -f ./.env.prod node dist/main.js",
     "start:dev": "env-cmd -f ./.env.dev nest start --webpack --webpackPath ./webpack-hmr.config.js --watch",
-    "test": "env-cmd -f ./.env.test jest --config jest.config.js --detectOpenHandles --forceExit",
-    "test:cov": "env-cmd -f ./.env.test jest --config jest.config.js  --detectOpenHandles --forceExit --coverage",
     "api": "env-cmd -f ./.env.dev npx ts-node scripts/generate-api.ts"
   },
   "dependencies": {

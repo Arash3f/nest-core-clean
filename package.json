@@ -1,0 +1,87 @@
+{
+  "name": "nest-clean",
+  "version": "0.0.1",
+  "description": "NestJs Core Clean",
+  "author": "Arash Alfooneh",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "prepare": "husky",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix -f stylish",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "studio:dev": "env-cmd -f ./.env.dev pnpm prisma studio",
+    "prisma:generate:dev": "env-cmd -f ./.env.dev prisma generate",
+    "prisma:migrate:dev": "env-cmd -f ./.env.dev prisma migrate dev --name init",
+    "prisma:push:dev": "env-cmd -f ./.env.dev prisma db push",
+    "start:build": "env-cmd -f ./.env.prod nest build",
+    "start:prod": "env-cmd -f ./.env.prod node dist/main.js",
+    "start:dev": "env-cmd -f ./.env.dev nest start --webpack --webpackPath ./webpack-hmr.config.js --watch",
+    "test": "env-cmd -f ./.env.test jest --config jest.config.js --detectOpenHandles --forceExit",
+    "test:cov": "env-cmd -f ./.env.test jest --config jest.config.js  --detectOpenHandles --forceExit --coverage",
+    "api": "env-cmd -f ./.env.dev npx ts-node scripts/generate-api.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.21",
+    "@nestjs/config": "^4.0.4",
+    "@nestjs/core": "^11.1.21",
+    "@nestjs/jwt": "^11.0.2",
+    "@nestjs/platform-express": "^11.1.21",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "argon2": "^0.44.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "0.14.2",
+    "clean-deep": "^3.4.0",
+    "env-cmd": "^11.0.0",
+    "pg": "^8.20.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "uuid": "^11.1.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@nestjs/cli": "^11.0.21",
+    "@nestjs/swagger": "11.1.1",
+    "@nestjs/testing": "^11.1.21",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.19.19",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^18.0.0",
+    "commitizen": "^4.3.1",
+    "commitlint-config-gitmoji": "^2.3.1",
+    "cz-customizable": "^7.5.4",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-simple-import-sort": "^13.0.0",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "lint-staged": "^17.0.7",
+    "prettier": "3.5.3",
+    "prisma": "^7.8.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "ts-jest": "^29.4.9",
+    "ts-loader": "^9.5.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.59.3",
+    "webpack": "^5.106.2",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "config/path/to/my/config.js"
+    }
+  },
+  "lint-staged": {
+    "src/*/*/*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}

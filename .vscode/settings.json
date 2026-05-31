@@ -1,0 +1,29 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.run": "onSave",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "prettier.enable": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "material-icon-theme.activeIconPack": "nest",
+
+  // "jest.jestCommandLine": "pnpm run test",
+  // "jest.rootPath": "."
+
+  "js/ts.preferences.importModuleSpecifier": "non-relative",
+  "js/ts.preferences.importModuleSpecifierEnding": "minimal"
+}

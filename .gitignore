@@ -1,0 +1,70 @@
+# compiled output
+/dist
+/node_modules
+/backup
+/upload
+
+/swagger
+
+/coverage
+/doc
+/documentation
+
+.env
+.env.test
+.env.dev
+.env.dev.docker
+.env.prod
+.env.prod.docker
+.env.docker.dev
+.env.docker.prod
+docker.env.prod
+docker.env.dev
+
+docker.env
+/files
+/temp
+shell.ts
+.swc
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+docker/develop/docker.env.dev.sample
+docker/production/docker.env.prod.sample
+docker/develop/.env.docker2.dev
+docker/develop/docker.env2.dev
+docker/production/.env.docker2.prod
+docker/production/docker.env2.prod
+
+
+query_engine-windows.dll.node
+schema-engine-windows.exe

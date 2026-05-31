@@ -1,0 +1,9 @@
+Dockerfile
+.dockerignore
+documentation
+node_modules
+dist
+.git
+.gitignore
+.husky
+scripts

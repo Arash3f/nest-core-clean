@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2021",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "types": ["node", "jest"],
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "paths": {
+      "@domain/*": ["src/domain/*"],
+      "@infrastructure/*": ["src/infrastructure/*"],
+      "@application/*": ["src/application/*"],
+      "@presentation/*": ["src/presentation/*"]
+    },
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "typedocOptions": {
+    "out": "doc",
+    "exclude": "**/node_modules/**"
+  },
+  "include": [
+    "src/**/*",
+    "scripts/**/*",
+    "webpack-hmr.config.js",
+    "prisma.config.ts",
+    "tests/**/*"
+  ],
+  "exclude": ["dist", "node_modules", "doc", "coverage", "zeus", "swagger"]
+}

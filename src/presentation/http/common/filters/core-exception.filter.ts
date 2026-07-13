@@ -9,113 +9,70 @@ import {
   HttpStatus,
   Logger,
 } from "@nestjs/common"
+import type { GqlContextType } from "@nestjs/graphql"
 import {
   ErrorResponseBody,
   HttpExceptionResponseBody,
 } from "@presentation/http/common/filters/core-exception.type"
 import type { Request, Response } from "express"
+import { GraphQLError } from "graphql"
 import { ModuleNames } from "src/constants"
 
 /**
- * Global exception filter that catches all unhandled exceptions and transforms them
- * into a standardized error response format.
- *
- * @description
- * This filter serves as the last line of defense for exception handling in the application.
- * It catches any exception that hasn't been handled by other filters or guards, and
- * transforms it into a consistent `ErrorResponseBody` format.
- *
- * Key features:
- * - Handles `DomainException` (business logic errors)
- * - Handles NestJS `HttpException` (HTTP-specific errors)
- * - Handles generic JavaScript `Error` objects
- * - Sanitizes error details in production environment
- * - Logs errors with context in non-production environments
- * - Provides Persian translations for domain exceptions
- *
- * @decorator `@Catch()` - Catches all exceptions (no specific type)
- *
- * @example
- * Register as global filter:
- * ```ts
- * // main.ts
- * import { CoreExceptionFilter } from './filters/core-exception.filter';
- *
- * async function bootstrap() {
- *   const app = await NestFactory.create(AppModule);
- *   app.useGlobalFilters(app.get(CoreExceptionFilter));
- *   await app.listen(3000);
- * }
- * ```
- *
- * @example
- * Throwing DomainException (handled by this filter):
- * ```ts
- * throw new DomainException({
- *   message: 'User not found',
- *   persianTranslation: 'کاربر یافت نشد',
- *   statusCode: HttpStatus.NOT_FOUND,
- *   code: 1001,
- *   module: ModuleNames.UserModule
- * });
- * ```
- *
- * @example
- * Throwing NestJS HttpException (handled by this filter):
- * ```ts
- * throw new BadRequestException(['email is invalid', 'password too weak']);
- * // Transforms array messages into comma-separated string
- * ```
+ * Global exception filter that normalizes every thrown exception into a
+ * consistent {@link ErrorResponseBody}.
  *
  * @remarks
- * **Error Response Structure:**
- * - Successfully processed exceptions (DomainException, HttpException) preserve their
- *   specific status codes and messages
- * - Unknown exceptions are converted to 500 Internal Server Error
- * - In production (`NodeEnv.Production`), debug information is automatically stripped
- *
- * **Logging Behavior:**
- * - Production: Only minimal error response (no debug info)
- * - Development/Staging: Full error details logged and returned
- *
- * @see {@link DomainException} - Business logic exceptions
+ * - **GraphQL**: rethrows a `GraphQLError` whose `extensions.originalError`
+ *   carries the body (Apollo always replies HTTP 200).
+ * - **HTTP**: writes the body with the matching status code.
  */
 @Catch()
 export class CoreExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(CoreExceptionFilter.name)
 
-  /**
-   * Creates an instance of CoreExceptionFilter.
-   *
-   * @param env - Environment configuration service (used to check node environment)
-   */
   constructor(private readonly env: EnvConfigService) {}
 
-  /**
-   * Main exception handling method called by NestJS when an exception occurs.
-   *
-   * @param exception - The caught exception (can be any type)
-   * @param host - Arguments host providing access to HTTP context
-   *
-   * @remarks
-   * **Exception Processing Priority:**
-   * 1. DomainException (most specific, business logic)
-   * 2. HttpException (NestJS HTTP exceptions)
-   * 3. Error (generic JavaScript errors)
-   * 4. string (raw error messages)
-   * 5. unknown (fallback for any other type)
-   *
-   * **Environment Behavior:**
-   * - Production: Removes `debugError` and `developerMessage` fields
-   * - Non-Production: Logs full exception details and includes debug info
-   */
-  catch(exception: unknown, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost): void {
+    const errorBody = this.normalize(exception, host)
+    const isUnhandled = !(
+      exception instanceof DomainException || exception instanceof HttpException
+    )
+
+    if (this.env.nodeEnv === NodeEnv.Production) {
+      delete errorBody.debugError
+      delete errorBody.developerMessage
+      if (isUnhandled) {
+        errorBody.message = "Internal server error"
+      }
+    } else {
+      this.logger.error({ exception, errorBody })
+    }
+
+    if (host.getType<GqlContextType>() === "graphql") {
+      throw new GraphQLError(errorBody.message, {
+        extensions: { originalError: errorBody },
+      })
+    }
+
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
-    const request = ctx.getRequest<Request>()
+
+    response.status(errorBody.statusCode).send({
+      ...errorBody,
+      statusCode: errorBody.statusCode,
+    })
+  }
+
+  private normalize(exception: unknown, host: ArgumentsHost): ErrorResponseBody {
+    const path =
+      host.getType<GqlContextType>() === "graphql"
+        ? "graphql"
+        : (host.switchToHttp().getRequest<Request>().originalUrl ??
+          host.switchToHttp().getRequest<Request>().url)
 
     const errorBody: ErrorResponseBody = {
-      path: request.originalUrl ?? request.url,
+      path,
       code: 9999,
       module: ModuleNames.DomainModule,
       message: "",
@@ -125,10 +82,6 @@ export class CoreExceptionFilter implements ExceptionFilter {
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
     }
 
-    /**
-     * Handle DomainException (business logic errors)
-     * Preserves all custom fields: message, translation, code, module
-     */
     if (exception instanceof DomainException) {
       errorBody.message = exception.message
       errorBody.statusCode = exception.statusCode
@@ -137,11 +90,6 @@ export class CoreExceptionFilter implements ExceptionFilter {
       errorBody.code = exception.code
       errorBody.module = exception.module
     } else if (exception instanceof HttpException) {
-      /**
-       * Handle NestJS HttpException
-       * Extracts status code and response body (supports string or object)
-       * Converts validation error arrays to comma-separated strings
-       */
       errorBody.statusCode = exception.getStatus()
 
       const exceptionResponse = exception.getResponse()
@@ -163,10 +111,6 @@ export class CoreExceptionFilter implements ExceptionFilter {
         errorBody.debugError = responseBody
       }
     } else if (exception instanceof Error) {
-      /**
-       * Handle standard JavaScript Error
-       * Captures error name, message, and stack trace
-       */
       errorBody.message = exception.message
       errorBody.debugError = {
         name: exception.name,
@@ -174,41 +118,18 @@ export class CoreExceptionFilter implements ExceptionFilter {
         stack: exception.stack,
       }
     } else if (typeof exception === "string") {
-      /**
-       * Handle string exceptions
-       * Some libraries or code may throw raw strings
-       */
       errorBody.message = exception
       errorBody.debugError = {
         name: "Error",
         message: exception,
       }
     } else {
-      /**
-       * Fallback for unknown exception types
-       * Ensures the application never crashes
-       */
       errorBody.message = "Internal server error"
       errorBody.debugError = {
         value: exception,
       }
     }
 
-    /**
-     * Production environment sanitization
-     * Removes sensitive debugging information
-     */
-    if (this.env.nodeEnv === NodeEnv.Production) {
-      delete errorBody.debugError
-      delete errorBody.developerMessage
-    } else {
-      // Non-production logging for debugging
-      this.logger.error({ exception, errorBody })
-    }
-
-    response.status(errorBody.statusCode).send({
-      ...errorBody,
-      statusCode: errorBody.statusCode,
-    })
+    return errorBody
   }
 }

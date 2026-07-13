@@ -1,6 +1,6 @@
 import { createParamDecorator, type ExecutionContext } from "@nestjs/common"
+import { getRequest } from "@presentation/common/utils/get-request.util"
 import { getJwtFromRequest } from "@presentation/http/common/utils/jwt-extract.util"
-import type { Request } from "express"
 
 /**
  * Custom decorator that extracts the JWT token from an HTTP request.
@@ -61,7 +61,7 @@ import type { Request } from "express"
  */
 export const GetJwtToken = createParamDecorator<string>(
   (_data: unknown, context: ExecutionContext) => {
-    const req = context.switchToHttp().getRequest<Request>()
+    const req = getRequest(context)
     return getJwtFromRequest(req)
   },
 )

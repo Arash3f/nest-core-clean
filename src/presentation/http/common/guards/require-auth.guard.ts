@@ -1,10 +1,8 @@
 import { USER_READER_PORT, type UserReaderPort } from "@application/common/ports/user-reader.port"
 import type { CanActivate, ExecutionContext } from "@nestjs/common"
 import { Inject, Injectable, UnauthorizedException } from "@nestjs/common"
-import {
-  AuthenticatedRequest,
-  RequestUser,
-} from "@presentation/http/common/types/request.type"
+import { getRequest } from "@presentation/common/utils/get-request.util"
+import { RequestUser } from "@presentation/http/common/types/request.type"
 
 @Injectable()
 export class RequireAuthGuard implements CanActivate {
@@ -14,7 +12,7 @@ export class RequireAuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const req = context.switchToHttp().getRequest<AuthenticatedRequest>()
+    const req = getRequest(context)
 
     if (!req.tokenContext || req.tokenContext.kind !== "authenticated") {
       throw new UnauthorizedException()

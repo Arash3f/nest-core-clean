@@ -8,4 +8,5 @@ export enum ModuleNames {
   PrismaModule = "PrismaModule",
   HealthModule = "HealthModule",
   ConfigModule = "ConfigModule",
+  GraphqlModule = "GraphqlModule",
 }

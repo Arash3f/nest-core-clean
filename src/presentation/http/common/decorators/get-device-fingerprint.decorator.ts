@@ -1,5 +1,5 @@
 import { createParamDecorator, type ExecutionContext } from "@nestjs/common"
-import type { AuthenticatedRequest } from "@presentation/http/common/types/request.type"
+import { getRequest } from "@presentation/common/utils/get-request.util"
 import { getDeviceFingerprint } from "@presentation/http/common/utils/device-fingerprint.util"
 
 /**
@@ -10,7 +10,7 @@ import { getDeviceFingerprint } from "@presentation/http/common/utils/device-fin
  */
 export const GetDeviceFingerprint = createParamDecorator<unknown, string>(
   (_data: unknown, context: ExecutionContext) => {
-    const req = context.switchToHttp().getRequest<AuthenticatedRequest>()
+    const req = getRequest(context)
     return getDeviceFingerprint(req)
   },
 )

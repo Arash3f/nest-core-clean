@@ -1,5 +1,5 @@
 import { createParamDecorator, type ExecutionContext, UnauthorizedException } from "@nestjs/common"
-import type { AuthenticatedRequest } from "@presentation/http/common/types/request.type"
+import { getRequest } from "@presentation/common/utils/get-request.util"
 
 /**
  * Custom decorator that extracts the authenticated user's ID from the request.
@@ -85,7 +85,7 @@ import type { AuthenticatedRequest } from "@presentation/http/common/types/reque
  */
 export const GetUserId = createParamDecorator<string>(
   (_data: unknown, context: ExecutionContext) => {
-    const req = context.switchToHttp().getRequest<AuthenticatedRequest>()
+    const req = getRequest(context)
 
     const userId = req.user?.id
 

@@ -18,7 +18,7 @@ export class Argon2PasswordHasherAdapter implements PasswordHasherPort {
     })
   }
 
-  async verify(plain: string, hash: string): Promise<boolean> {
+  async verify(hash: string, plain: string): Promise<boolean> {
     try {
       return await argon2.verify(hash, plain)
     } catch {

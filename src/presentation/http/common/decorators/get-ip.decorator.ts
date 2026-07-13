@@ -1,5 +1,5 @@
 import { createParamDecorator, type ExecutionContext } from "@nestjs/common"
-import type { Request } from "express"
+import { getRequest } from "@presentation/common/utils/get-request.util"
 
 /**
  * Options for {@link GetIp} decorator.
@@ -106,7 +106,7 @@ function firstIpFromXForwardedFor(xff: unknown): string {
  */
 export const GetIp = createParamDecorator(
   (options: GetIpOptions | undefined, context: ExecutionContext) => {
-    const req = context.switchToHttp().getRequest<Request>()
+    const req = getRequest(context)
 
     if (options?.trustProxyHeaders) {
       const cfConnectingIp = normalizeIp(req.headers["cf-connecting-ip"])

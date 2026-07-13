@@ -5,6 +5,7 @@
 /upload
 
 /swagger
+schema.gql
 
 /coverage
 /doc

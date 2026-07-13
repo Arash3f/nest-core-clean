@@ -1,11 +1,8 @@
 import type { CanActivate, ExecutionContext } from "@nestjs/common"
 import { Injectable } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
-import {
-  AuthenticatedRequest,
-  RequestUser,
-  TokenContext,
-} from "@presentation/http/common/types/request.type"
+import { getRequest } from "@presentation/common/utils/get-request.util"
+import { RequestUser, TokenContext } from "@presentation/http/common/types/request.type"
 import { getJwtFromRequest } from "@presentation/http/common/utils/jwt-extract.util"
 
 type JwtPayload = {
@@ -21,7 +18,7 @@ export class TokenGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const req = context.switchToHttp().getRequest<AuthenticatedRequest>()
+    const req = getRequest(context)
 
     req.tokenContext = { kind: "anonymous" }
 

@@ -29,8 +29,8 @@ module.exports = {
       name: "🚧 wip:\tWork in progress",
     },
     {
-      value: ":poop: Bcode",
-      name: "💩 Bcode:\tWrite bad code that needs to be improved.",
+      value: ":poop: bcode",
+      name: "💩 bcode:\tWrite bad code that needs to be improved.",
     },
     {
       value: ":bookmark: version",

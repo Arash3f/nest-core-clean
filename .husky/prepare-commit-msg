@@ -1,2 +1,10 @@
 #!/bin/sh
-exec < /dev/tty && git cz --hook || true
+
+# Skip when a message was already supplied (e.g. `git cz`, `git commit -m`, merge/amend).
+# Otherwise plain `git commit` would open the menu once via this hook,
+# and `git cz` would open it twice (once from cz, again from the hook).
+case "$2" in
+  message|merge|squash|commit) exit 0 ;;
+esac
+
+exec < /dev/tty && pnpm exec cz --hook || true

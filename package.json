@@ -16,7 +16,8 @@
     "start:build": "env-cmd -f ./.env.prod nest build",
     "start:prod": "env-cmd -f ./.env.prod node dist/main.js",
     "start:dev": "env-cmd -f ./.env.dev nest start --webpack --webpackPath ./webpack-hmr.config.js --watch",
-    "api": "env-cmd -f ./.env.dev npx ts-node scripts/generate-api.ts"
+    "api": "env-cmd -f ./.env.dev npx ts-node scripts/generate-api.ts",
+    "commit": "cz"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.21",
@@ -71,14 +72,14 @@
   },
   "config": {
     "commitizen": {
-      "path": "node_modules/cz-customizable"
+      "path": "./node_modules/cz-customizable"
     },
     "cz-customizable": {
-      "config": "config/path/to/my/config.js"
+      "config": ".cz-config.js"
     }
   },
   "lint-staged": {
-    "src/*/*/*.{js,ts}": [
+    "src/**/*.{js,ts}": [
       "eslint --fix",
       "prettier --write"
     ]

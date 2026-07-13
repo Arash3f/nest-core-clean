@@ -1,12 +1,13 @@
-import { ApiResponseProperty } from "@nestjs/swagger"
+import { ApiProperty } from "@nestjs/swagger"
 import { IsJWT } from "class-validator"
 
+/** @deprecated Prefer LoginResponseDto — kept for OpenAPI compatibility. */
 export class RefreshTokenResponseDto {
-  @ApiResponseProperty({ type: String })
+  @ApiProperty({ type: String })
   @IsJWT()
   accessToken: string
 
-  @ApiResponseProperty({ type: String })
+  @ApiProperty({ type: String })
   @IsJWT()
   refreshToken: string
 }

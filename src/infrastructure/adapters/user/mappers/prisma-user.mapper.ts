@@ -13,6 +13,7 @@ export class PrismaUserMapper {
       row.name,
       row.active,
       role,
+      row.refreshTokenHash,
       row.createdAt,
       row.updatedAt,
     )

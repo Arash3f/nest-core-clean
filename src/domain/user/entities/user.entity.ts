@@ -8,6 +8,7 @@ export class User {
     public name: string,
     public active: boolean,
     public role: Role,
+    public refreshTokenHash: string | null,
     public readonly createdDate: Date,
     public readonly updatedDate: Date,
   ) {}

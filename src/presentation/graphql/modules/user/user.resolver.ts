@@ -12,6 +12,10 @@ import {
   ReadUsersWithFilterUseCasePort,
 } from "@application/user/use-cases/read-users-with-filter/read-users-with-filter-usecase.port"
 import {
+  UPDATE_ME_USE_CASE,
+  UpdateMeUseCasePort,
+} from "@application/user/use-cases/update-me/update-me-usecase.port"
+import {
   UPDATE_USER_USE_CASE,
   UpdateUserUseCasePort,
 } from "@application/user/use-cases/update-user/update-user-usecase.port"
@@ -24,6 +28,7 @@ import { SuccessDto } from "@presentation/graphql/common/dto/success.dto"
 import { CreateUserRequestDto } from "@presentation/graphql/modules/user/dto/create-user-request.dto"
 import { ReadUserWhereRequestDto } from "@presentation/graphql/modules/user/dto/read-user-request.dto"
 import { ReadUserResponseDto } from "@presentation/graphql/modules/user/dto/read-user-response.dto"
+import { UpdateMeRequestDto } from "@presentation/graphql/modules/user/dto/update-me-request.dto"
 import { UpdateUserRequestDataDto } from "@presentation/graphql/modules/user/dto/update-user-request.dto"
 import { ReadUserGraphqlMapper } from "@presentation/graphql/modules/user/mappers/read-user.mapper"
 import { UserGraphqlMapper } from "@presentation/graphql/modules/user/mappers/user.mapper"
@@ -49,6 +54,9 @@ export class UserResolver {
 
     @Inject(UPDATE_USER_USE_CASE)
     private readonly updateUserUseCase: UpdateUserUseCasePort,
+
+    @Inject(UPDATE_ME_USE_CASE)
+    private readonly updateMeUseCase: UpdateMeUseCasePort,
   ) {}
 
   @Query(() => UserModel)
@@ -56,6 +64,19 @@ export class UserResolver {
   async me(@GetUserId() requesterId: string): Promise<UserModel> {
     const output = await this.meUseCase.execute({ id: requesterId })
     return UserGraphqlMapper.fromMe(output)
+  }
+
+  @Mutation(() => UserModel)
+  @UseGuards(IsLoggedInGuard)
+  async updateMe(
+    @GetUserId() requesterId: string,
+    @Args("data") data: UpdateMeRequestDto,
+  ): Promise<UserModel> {
+    const output = await this.updateMeUseCase.execute({
+      userId: requesterId,
+      ...data,
+    })
+    return UserGraphqlMapper.fromUser(output)
   }
 
   @Mutation(() => UserModel)

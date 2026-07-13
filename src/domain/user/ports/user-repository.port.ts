@@ -10,6 +10,7 @@ export interface UsersRepositoryPort {
   update(id: string, data: UpdateUserType): Promise<User>
   delete(id: string): Promise<boolean>
   updatePassword(id: string, passwordHash: string): Promise<boolean>
+  setRefreshTokenHash(id: string, refreshTokenHash: string | null): Promise<void>
   search(data: SearchUsersType): Promise<{ count: number; data: User[] }>
   findAll(): Promise<User[]>
 }

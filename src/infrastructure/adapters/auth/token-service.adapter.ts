@@ -1,6 +1,7 @@
 import type {
-  AccessTokenPayload,
-  RefreshTokenPayload,
+  SignTokenInput,
+  TokenPair,
+  TokenPayload,
   TokenServicePort,
 } from "@application/auth/ports/token-service.port"
 import { EnvConfigService } from "@infrastructure/config/env-config.service"
@@ -14,23 +15,31 @@ export class JwtTokenServiceAdapter implements TokenServicePort {
     private readonly env: EnvConfigService,
   ) {}
 
-  async signAccessToken(payload: { sub: string; email?: string; role?: string }): Promise<string> {
-    return this.jwtService.signAsync(payload, {
-      expiresIn: this.env.jwtAccessExpire,
-    })
+  async signTokenPair(payload: SignTokenInput): Promise<TokenPair> {
+    const tokenPayload: TokenPayload = {
+      id: payload.id,
+      username: payload.username.toLowerCase(),
+      deviceId: payload.deviceId,
+      role: payload.role,
+    }
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(tokenPayload, {
+        expiresIn: this.env.jwtAccessExpire,
+      }),
+      this.jwtService.signAsync(tokenPayload, {
+        expiresIn: this.env.jwtRefreshExpire,
+      }),
+    ])
+
+    return { accessToken, refreshToken }
   }
 
-  async signRefreshToken(payload: { sub: string; tokenVersion?: number }): Promise<string> {
-    return this.jwtService.signAsync(payload, {
-      expiresIn: this.env.jwtRefreshExpire,
-    })
+  async verifyAccessToken(token: string): Promise<TokenPayload> {
+    return this.jwtService.verifyAsync<TokenPayload>(token)
   }
 
-  async verifyAccessToken(token: string): Promise<AccessTokenPayload> {
-    return this.jwtService.verifyAsync<AccessTokenPayload>(token, {})
-  }
-
-  async verifyRefreshToken(token: string): Promise<RefreshTokenPayload> {
-    return this.jwtService.verifyAsync<RefreshTokenPayload>(token, {})
+  async verifyRefreshToken(token: string): Promise<TokenPayload> {
+    return this.jwtService.verifyAsync<TokenPayload>(token)
   }
 }

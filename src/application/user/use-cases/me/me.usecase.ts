@@ -21,7 +21,7 @@ export class MeUseCase {
 
     return {
       id: user.id,
-      username: user.name,
+      username: user.username,
       name: user.name,
       active: user.active,
       role: user.role,

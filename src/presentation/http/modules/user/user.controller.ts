@@ -13,6 +13,10 @@ import {
   ReadUsersWithFilterUseCasePort,
 } from "@application/user/use-cases/read-users-with-filter/read-users-with-filter-usecase.port"
 import {
+  UPDATE_ME_USE_CASE,
+  UpdateMeUseCasePort,
+} from "@application/user/use-cases/update-me/update-me-usecase.port"
+import {
   UPDATE_USER_USE_CASE,
   UpdateUserUseCasePort,
 } from "@application/user/use-cases/update-user/update-user-usecase.port"
@@ -38,6 +42,7 @@ import { ParseUUIDPipe } from "@presentation/http/common/pipes/uuid.pipe"
 import { CreateUserRequestDto } from "@presentation/http/modules/user/dto/create-user-request.dto"
 import { ReadUserRequestDto } from "@presentation/http/modules/user/dto/read-user-request.dto"
 import { ReadUserResponseDto } from "@presentation/http/modules/user/dto/read-user-response.dto"
+import { UpdateMeRequestDto } from "@presentation/http/modules/user/dto/update-me-request.dto"
 import { UpdateUserRequestDto } from "@presentation/http/modules/user/dto/update-user-request.dto"
 import { CreateUserMapper } from "@presentation/http/modules/user/mappers/create-user.mapper"
 import { MeMapper } from "@presentation/http/modules/user/mappers/me-response.mapper"
@@ -63,6 +68,9 @@ export class UserController {
 
     @Inject(UPDATE_USER_USE_CASE)
     private readonly updateUserUseCase: UpdateUserUseCasePort,
+
+    @Inject(UPDATE_ME_USE_CASE)
+    private readonly updateMeUseCase: UpdateMeUseCasePort,
   ) {}
 
   @Get("me")
@@ -81,6 +89,30 @@ export class UserController {
   async me(@GetUserId() requesterId: string): Promise<UserSimpleModel> {
     const output = await this.meUseCase.execute({ id: requesterId })
     return MeMapper.toDto(output)
+  }
+
+  @Post("updateMe")
+  @ApiOperation({
+    operationId: "updateMe",
+    summary: "Update my own profile",
+    description: "Lets any logged-in user update their own name/username (not role or active).",
+  })
+  @ApiBody({ type: UpdateMeRequestDto })
+  @ApiResponse({
+    type: UserModel,
+    status: 200,
+  })
+  @ApiBearerAuth()
+  @UseGuards(IsLoggedInGuard)
+  @apiErrorResponses([UserErrors.UserNotFound, UserErrors.UsernameIsDuplicated])
+  async updateMe(
+    @GetUserId() requesterId: string,
+    @Body() data: UpdateMeRequestDto,
+  ): Promise<UserSimpleModel> {
+    return await this.updateMeUseCase.execute({
+      userId: requesterId,
+      ...data,
+    })
   }
 
   @Post("createUser")

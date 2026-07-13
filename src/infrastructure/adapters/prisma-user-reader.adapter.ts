@@ -1,4 +1,5 @@
 import type { UserReaderPort } from "@application/common/ports/user-reader.port"
+import type { Role } from "@domain/common/value-objects/role.value-object"
 import { PrismaService } from "@infrastructure/orm/prisma/prisma.service"
 import { PRISMA_SERVICE } from "@infrastructure/orm/prisma/prisma.tokens"
 import { Inject, Injectable } from "@nestjs/common"
@@ -25,7 +26,7 @@ export class PrismaUserReaderAdapter implements UserReaderPort {
     return {
       id: user.id,
       username: user.username ?? undefined,
-      role: user.role,
+      role: user.role as Role,
     }
   }
 }

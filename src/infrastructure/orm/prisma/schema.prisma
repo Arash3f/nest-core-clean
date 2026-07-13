@@ -7,14 +7,15 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid()) @db.Uuid
-  username     String   @unique
-  passwordHash String
-  name         String
-  active       Boolean  @default(true)
-  role         Role     @default(Member)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id               String   @id @default(uuid()) @db.Uuid
+  username         String   @unique
+  passwordHash     String
+  name             String
+  active           Boolean  @default(true)
+  role             Role     @default(Member)
+  refreshTokenHash String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   @@map("users")
 }

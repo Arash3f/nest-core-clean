@@ -1,6 +1,9 @@
+import { NodeEnv } from "@infrastructure/config/env.types"
+import { EnvConfigService } from "@infrastructure/config/env-config.service"
 import { InfrastructureModule } from "@infrastructure/infrastructure.module"
 import { Module } from "@nestjs/common"
 import { APP_GUARD } from "@nestjs/core"
+import { ThrottlerModule } from "@nestjs/throttler"
 import { GraphqlPresentationModule } from "@presentation/graphql/graphql.module"
 import { TokenGuard } from "@presentation/http/common/guards/token.guard"
 import { AuthHttpModule } from "@presentation/http/modules/auth/auth.module"
@@ -10,6 +13,20 @@ import { UserHttpModule } from "@presentation/http/modules/user/user.module"
 @Module({
   imports: [
     InfrastructureModule,
+    ThrottlerModule.forRootAsync({
+      imports: [InfrastructureModule],
+      inject: [EnvConfigService],
+      useFactory: (env: EnvConfigService) => ({
+        skipIf: () => env.nodeEnv === NodeEnv.Test,
+        throttlers: [
+          {
+            name: "default",
+            ttl: env.throttleTtlMs,
+            limit: env.throttleLimit,
+          },
+        ],
+      }),
+    }),
     AuthHttpModule,
     UserHttpModule,
     HealthHttpModule,

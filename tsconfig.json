@@ -23,7 +23,8 @@
       "@domain/*": ["src/domain/*"],
       "@infrastructure/*": ["src/infrastructure/*"],
       "@application/*": ["src/application/*"],
-      "@presentation/*": ["src/presentation/*"]
+      "@presentation/*": ["src/presentation/*"],
+      "@src/*": ["src/*"]
     },
     "noUnusedLocals": true,
     "noUnusedParameters": true,

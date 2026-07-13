@@ -1,14 +1,17 @@
+import type { Role } from "@domain/common/value-objects/role.value-object"
 import type { CanActivate, ExecutionContext } from "@nestjs/common"
 import { Injectable } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
 import { getRequest } from "@presentation/common/utils/get-request.util"
 import { RequestUser, TokenContext } from "@presentation/http/common/types/request.type"
+import { getDeviceFingerprint } from "@presentation/http/common/utils/device-fingerprint.util"
 import { getJwtFromRequest } from "@presentation/http/common/utils/jwt-extract.util"
 
 type JwtPayload = {
   id: string
-  role: RequestUser["role"]
+  role: Role
   username?: string
+  deviceId?: string
   iat?: number
   exp?: number
 }
@@ -27,6 +30,10 @@ export class TokenGuard implements CanActivate {
 
     try {
       const payload = await this.jwtService.verifyAsync<JwtPayload>(token)
+
+      if (!payload.deviceId || payload.deviceId !== getDeviceFingerprint(req)) {
+        return true
+      }
 
       const user: RequestUser = {
         id: payload.id,

@@ -10,6 +10,8 @@ import { ReadUsersUseCase } from "@application/user/use-cases/read-users/read-us
 import { READ_USERS_USE_CASE } from "@application/user/use-cases/read-users/read-users-usecase.port"
 import { ReadUsersWithFilterUseCase } from "@application/user/use-cases/read-users-with-filter/read-users-with-filter.usecase"
 import { READ_USERS_WITH_FILTER_USE_CASE } from "@application/user/use-cases/read-users-with-filter/read-users-with-filter-usecase.port"
+import { UpdateMeUseCase } from "@application/user/use-cases/update-me/update-me.usecase"
+import { UPDATE_ME_USE_CASE } from "@application/user/use-cases/update-me/update-me-usecase.port"
 import { UpdateUserUseCase } from "@application/user/use-cases/update-user/update-user.usecase"
 import { UPDATE_USER_USE_CASE } from "@application/user/use-cases/update-user/update-user-usecase.port"
 import { AuthInfrastructureModule } from "@infrastructure/adapters/auth/auth-infrastructure.module"
@@ -60,6 +62,12 @@ import { Module } from "@nestjs/common"
       provide: CHANGE_PASSWORD_USER_USE_CASE,
       useExisting: ChangePasswordUseCase,
     },
+
+    UpdateMeUseCase,
+    {
+      provide: UPDATE_ME_USE_CASE,
+      useExisting: UpdateMeUseCase,
+    },
   ],
   exports: [
     CREATE_USER_USE_CASE,
@@ -69,6 +77,7 @@ import { Module } from "@nestjs/common"
     READ_USERS_WITH_FILTER_USE_CASE,
     UPDATE_USER_USE_CASE,
     CHANGE_PASSWORD_USER_USE_CASE,
+    UPDATE_ME_USE_CASE,
   ],
 })
 export class UserApplicationModule {}

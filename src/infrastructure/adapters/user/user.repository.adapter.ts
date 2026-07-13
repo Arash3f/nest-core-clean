@@ -44,7 +44,10 @@ export class PrismaUsersRepository implements UsersRepositoryPort {
   }
 
   async delete(id: string): Promise<boolean> {
-    await this.prisma.user.update({ where: { id }, data: { active: false } })
+    await this.prisma.user.update({
+      where: { id },
+      data: { active: false, refreshTokenHash: null },
+    })
     return true
   }
 
@@ -52,15 +55,22 @@ export class PrismaUsersRepository implements UsersRepositoryPort {
     const rows = await this.prisma.user.findMany({
       orderBy: { createdAt: "desc" },
     })
-    const mapped = rows.map((row) => {
-      return PrismaUserMapper.toDomain(row)
-    })
-    return mapped
+    return rows.map((row) => PrismaUserMapper.toDomain(row))
   }
 
   async updatePassword(id: string, passwordHash: string): Promise<boolean> {
-    await this.prisma.user.update({ where: { id }, data: { passwordHash: passwordHash } })
+    await this.prisma.user.update({
+      where: { id },
+      data: { passwordHash, refreshTokenHash: null },
+    })
     return true
+  }
+
+  async setRefreshTokenHash(id: string, refreshTokenHash: string | null): Promise<void> {
+    await this.prisma.user.update({
+      where: { id },
+      data: { refreshTokenHash },
+    })
   }
 
   async search(data: SearchUsersType): Promise<{ count: number; data: User[] }> {
@@ -79,7 +89,7 @@ export class PrismaUsersRepository implements UsersRepositoryPort {
 
     whereClause = cleanDeep(whereClause)
 
-    const count = await this.prisma.user.count({ where: data.where })
+    const count = await this.prisma.user.count({ where: whereClause })
 
     const rows = await this.prisma.user.findMany({
       where: whereClause,
@@ -87,10 +97,9 @@ export class PrismaUsersRepository implements UsersRepositoryPort {
       ...toPrismaPagination(data?.pagination),
     })
 
-    const mapped = rows.map((row) => {
-      return PrismaUserMapper.toDomain(row)
-    })
-
-    return { count, data: mapped }
+    return {
+      count,
+      data: rows.map((row) => PrismaUserMapper.toDomain(row)),
+    }
   }
 }

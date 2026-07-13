@@ -102,4 +102,26 @@ export class EnvConfigService {
       password,
     }
   }
+
+  /** Alias used by e2e helpers (matches REST/GraphQL naming). */
+  get defaultSuperUser(): ConfigUser {
+    return this.superUser
+  }
+
+  /** Alias used by e2e helpers (matches REST/GraphQL naming). */
+  get defaultMemberUser(): ConfigUser {
+    const member = this.memberUser
+    if (!member) {
+      throw new Error("MEMBER_USER_* env vars are required in this environment")
+    }
+    return member
+  }
+
+  get throttleTtlMs(): number {
+    return Number(this.configService.get<number>("THROTTLE_TTL_MS", 60_000))
+  }
+
+  get throttleLimit(): number {
+    return Number(this.configService.get<number>("THROTTLE_LIMIT", 10))
+  }
 }

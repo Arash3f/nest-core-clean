@@ -5,4 +5,7 @@ export default defineConfig({
     url: env("DATABASE_CONNECTION_URL"),
   },
   schema: "src/infrastructure/orm/prisma/schema.prisma",
+  migrations: {
+    path: "src/infrastructure/orm/prisma/migrations",
+  },
 })

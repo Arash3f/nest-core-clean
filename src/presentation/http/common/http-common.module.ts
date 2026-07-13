@@ -15,6 +15,6 @@ import { RequireAuthGuard } from "@presentation/http/common/guards/require-auth.
     PrismaUserReaderAdapter,
     { provide: USER_READER_PORT, useExisting: PrismaUserReaderAdapter },
   ],
-  exports: [RequireAuthGuard, IsAdminGuard, IsLoggedInGuard],
+  exports: [RequireAuthGuard, IsAdminGuard, IsLoggedInGuard, USER_READER_PORT],
 })
 export class HttpCommonModule {}

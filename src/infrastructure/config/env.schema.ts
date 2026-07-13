@@ -79,4 +79,10 @@ export class EnvSchema {
 
   @IsNumber()
   PASSWORD_HASH_PARALLELISM: number
+
+  @IsNumber()
+  THROTTLE_TTL_MS: number
+
+  @IsNumber()
+  THROTTLE_LIMIT: number
 }

@@ -10,13 +10,13 @@ import {
   type PasswordHasherPort,
 } from "@domain/auth/ports/password-hasher.port"
 import { DomainException } from "@domain/common/errors/domain.exception"
-import { UserErrors } from "@domain/user/errors/user.exceptions"
 import {
   USER_REPOSITORY_PORT,
   type UsersRepositoryPort,
 } from "@domain/user/ports/user-repository.port"
-import { Inject } from "@nestjs/common"
+import { Inject, Injectable } from "@nestjs/common"
 
+@Injectable()
 export class LoginUseCase {
   constructor(
     @Inject(USER_REPOSITORY_PORT)
@@ -33,16 +33,23 @@ export class LoginUseCase {
     const username = input.username.toLowerCase()
 
     const user = await this.usersRepo.findByUsername(username)
-    if (!user) throw new DomainException(UserErrors.UserNotFound)
+    if (!user) throw new DomainException(AuthErrors.IncorrectUsernameOrPassword)
+
+    if (!user.active) throw new DomainException(AuthErrors.InactiveUser)
 
     const valid = await this.hasher.verify(user.passwordHash, input.password)
     if (!valid) throw new DomainException(AuthErrors.IncorrectUsernameOrPassword)
 
-    const jwt = await this.tokenService.signAccessToken({
-      sub: user.id,
+    const tokens = await this.tokenService.signTokenPair({
+      id: user.id,
       username: user.username,
+      deviceId: input.deviceId,
       role: user.role,
     })
-    return { jwt }
+
+    const refreshTokenHash = await this.hasher.hash(tokens.refreshToken)
+    await this.usersRepo.setRefreshTokenHash(user.id, refreshTokenHash)
+
+    return tokens
   }
 }

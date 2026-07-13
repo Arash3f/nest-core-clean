@@ -1,3 +1,4 @@
 export type LoginOutput = {
-  jwt: string
+  accessToken: string
+  refreshToken: string
 }

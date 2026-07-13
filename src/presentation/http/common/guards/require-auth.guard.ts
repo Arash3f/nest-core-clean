@@ -27,7 +27,7 @@ export class RequireAuthGuard implements CanActivate {
     const requestUser: RequestUser = {
       id: foundUser.id,
       username: foundUser.username,
-      role: foundUser.role as RequestUser["role"],
+      role: foundUser.role,
     }
 
     req.user = requestUser

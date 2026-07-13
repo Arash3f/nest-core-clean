@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: nest-clean-core-dev-postgres
+    ports:
+      - 5436:5432
+    env_file:
+      - .docker.dev.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: ../../
+      dockerfile: docker/develop/Dockerfile.dev
+    container_name: nest-clean-core-dev-app
+    command: sh -c "pnpm exec prisma generate && pnpm exec prisma migrate deploy && pnpm run start:dev:docker"
+    ports:
+      - "3006:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - ".env.docker.dev"
+
+volumes:
+  postgres_data:

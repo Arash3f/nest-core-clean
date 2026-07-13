@@ -1,0 +1,5 @@
+allowBuilds:
+  '@prisma/engines': false
+  '@scarf/scarf': false
+  argon2: false
+  prisma: false

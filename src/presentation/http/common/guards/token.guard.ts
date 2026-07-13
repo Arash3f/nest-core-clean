@@ -5,7 +5,7 @@ import {
   AuthenticatedRequest,
   RequestUser,
   TokenContext,
-} from "@presentation/http/common/types/express-auth-request.type"
+} from "@presentation/http/common/types/request.type"
 import { getJwtFromRequest } from "@presentation/http/common/utils/jwt-extract.util"
 
 type JwtPayload = {
@@ -46,6 +46,7 @@ export class TokenGuard implements CanActivate {
         },
       }
 
+      req.user = user
       req.tokenContext = tokenContext
     } catch (error) {
       const err = error as Error

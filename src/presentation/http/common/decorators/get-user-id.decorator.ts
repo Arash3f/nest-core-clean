@@ -1,5 +1,5 @@
 import { createParamDecorator, type ExecutionContext, UnauthorizedException } from "@nestjs/common"
-import type { AuthenticatedRequest } from "@presentation/http/common/types/express-auth-request.type"
+import type { AuthenticatedRequest } from "@presentation/http/common/types/request.type"
 
 /**
  * Custom decorator that extracts the authenticated user's ID from the request.

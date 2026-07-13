@@ -5,56 +5,38 @@ import { Type } from "class-transformer"
 import { IsBoolean, IsEnum, IsOptional, IsString, ValidateNested } from "class-validator"
 
 /**
- * * Data transfers object to Update User Input
+ * Data transfers object to Update User
  */
-export class UpdateUserRequestData {
-  /**
-   * user username
-   */
+export class UpdateUserRequestDataDto {
   @ApiProperty({ type: String })
   @IsString()
   username: string
 
-  /**
-   * user activity
-   */
   @ApiProperty({ type: Boolean })
   @IsBoolean()
   active: boolean
 
-  /**
-   * user role
-   */
   @ApiPropertyOptional({ enum: Role })
   @IsEnum(Role)
   @IsOptional()
   role?: Role
 
-  /**
-   * user name
-   */
   @ApiProperty({ type: String })
   @IsString()
   name: string
 }
 
 /**
- * update use input
+ * update user request DTO
  */
 export class UpdateUserRequestDto {
-  /**
-   * find target user
-   */
   @Type(() => IdDto)
-  @ApiPropertyOptional({ type: IdDto })
+  @ApiProperty({ type: IdDto })
   @ValidateNested()
   where: IdDto
 
-  /**
-   * update data
-   */
-  @Type(() => UpdateUserRequestData)
-  @ApiPropertyOptional({ type: UpdateUserRequestData })
+  @Type(() => UpdateUserRequestDataDto)
+  @ApiProperty({ type: UpdateUserRequestDataDto })
   @ValidateNested()
-  data: UpdateUserRequestData
+  data: UpdateUserRequestDataDto
 }

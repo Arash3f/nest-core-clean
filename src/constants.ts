@@ -6,4 +6,6 @@ export enum ModuleNames {
   AuthModule = "AuthModule",
   UserModule = "UserModule",
   PrismaModule = "PrismaModule",
+  HealthModule = "HealthModule",
+  ConfigModule = "ConfigModule",
 }

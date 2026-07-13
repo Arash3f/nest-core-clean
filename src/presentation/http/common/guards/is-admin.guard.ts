@@ -1,7 +1,7 @@
 import { Role } from "@domain/common/value-objects/role.value-object"
 import type { CanActivate, ExecutionContext } from "@nestjs/common"
 import { ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common"
-import { AuthenticatedRequest } from "@presentation/http/common/types/express-auth-request.type"
+import { AuthenticatedRequest } from "@presentation/http/common/types/request.type"
 
 @Injectable()
 export class IsAdminGuard implements CanActivate {

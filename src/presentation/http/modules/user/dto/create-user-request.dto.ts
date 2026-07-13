@@ -1,37 +1,25 @@
 import { Role } from "@domain/common/value-objects/role.value-object"
 import { ApiProperty } from "@nestjs/swagger"
-import { IsEnum, IsString } from "class-validator"
+import { PASSWORD_MIN_LENGTH } from "@presentation/http/common/constants/password"
+import { IsEnum, IsString, MinLength } from "class-validator"
 
 /**
- * * Data transfers object to Create User Input
+ * Data transfers object to Create User
  */
 export class CreateUserRequestDto {
-  /**
-   * user name
-   */
   @ApiProperty({ type: String })
   @IsString()
   name: string
 
-  /**
-   * user username
-   */
   @ApiProperty({ type: String })
   @IsString()
   username: string
 
-  /**
-   * user password
-   *
-   * ! No length limit
-   */
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, minLength: PASSWORD_MIN_LENGTH })
   @IsString()
+  @MinLength(PASSWORD_MIN_LENGTH)
   password: string
 
-  /**
-   * user role
-   */
   @ApiProperty({ enum: Role })
   @IsEnum(Role)
   role: Role

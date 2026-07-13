@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common"
-import { AuthenticatedRequest } from "@presentation/http/common/types/express-auth-request.type"
+import { AuthenticatedRequest } from "@presentation/http/common/types/request.type"
 
 @Injectable()
 export class IsLoggedInGuard implements CanActivate {

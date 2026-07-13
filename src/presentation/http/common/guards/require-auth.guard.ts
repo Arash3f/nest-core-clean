@@ -4,7 +4,7 @@ import { Inject, Injectable, UnauthorizedException } from "@nestjs/common"
 import {
   AuthenticatedRequest,
   RequestUser,
-} from "@presentation/http/common/types/express-auth-request.type"
+} from "@presentation/http/common/types/request.type"
 
 @Injectable()
 export class RequireAuthGuard implements CanActivate {

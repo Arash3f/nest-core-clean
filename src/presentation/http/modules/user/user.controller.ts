@@ -1,9 +1,5 @@
 import { UserSimpleModel } from "@application/user/models/user-simple.model"
 import {
-  CHANGE_PASSWORD_USER_USE_CASE,
-  ChangePasswordUseCasePort,
-} from "@application/user/use-cases/change-password/change-password-usecase.port"
-import {
   CREATE_USER_USE_CASE,
   CreateUserUseCasePort,
 } from "@application/user/use-cases/create-user/create-user-usecase.port"
@@ -20,25 +16,36 @@ import {
   UPDATE_USER_USE_CASE,
   UpdateUserUseCasePort,
 } from "@application/user/use-cases/update-user/update-user-usecase.port"
-import { Body, Controller, Delete, Get, Patch, Post, Put, UseGuards } from "@nestjs/common"
-import { Inject } from "@nestjs/common"
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger"
+import { UserErrors } from "@domain/user/errors/user.exceptions"
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common"
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger"
+import { apiErrorResponses } from "@presentation/http/common/decorators/api-error-response.decorator"
 import { GetUserId } from "@presentation/http/common/decorators/get-user-id.decorator"
-import { IdDto } from "@presentation/http/common/dto/id.dto"
 import { SuccessDto } from "@presentation/http/common/dto/success.dto"
 import { IsAdminGuard } from "@presentation/http/common/guards/is-admin.guard"
 import { IsLoggedInGuard } from "@presentation/http/common/guards/is-logged-in.guard"
-import { ChangePasswordRequestDto } from "@presentation/http/modules/user/dto/change-password-request.dto"
+import { ParseUUIDPipe } from "@presentation/http/common/pipes/uuid.pipe"
 import { CreateUserRequestDto } from "@presentation/http/modules/user/dto/create-user-request.dto"
-import { ReadUserRequestDto } from "@presentation/http/modules/user/dto/read-user-with-filter-request.dto"
-import { ReadUserResponseDto } from "@presentation/http/modules/user/dto/read-user-with-filter-response.dto"
+import { ReadUserRequestDto } from "@presentation/http/modules/user/dto/read-user-request.dto"
+import { ReadUserResponseDto } from "@presentation/http/modules/user/dto/read-user-response.dto"
 import { UpdateUserRequestDto } from "@presentation/http/modules/user/dto/update-user-request.dto"
 import { CreateUserMapper } from "@presentation/http/modules/user/mappers/create-user.mapper"
 import { MeMapper } from "@presentation/http/modules/user/mappers/me-response.mapper"
-import { ReadeUserWithFilterMapper } from "@presentation/http/modules/user/mappers/read-user-with-filter.mapper"
+import { ReadUserMapper } from "@presentation/http/modules/user/mappers/read-user.mapper"
 import { UpdateUserMapper } from "@presentation/http/modules/user/mappers/update-user.mapper"
 import { UserModel } from "@presentation/http/modules/user/model/user.model"
 
+@ApiTags("User")
 @Controller("user")
 export class UserController {
   constructor(
@@ -56,16 +63,8 @@ export class UserController {
 
     @Inject(UPDATE_USER_USE_CASE)
     private readonly updateUserUseCase: UpdateUserUseCasePort,
-
-    @Inject(CHANGE_PASSWORD_USER_USE_CASE)
-    private readonly changePasswordUseCase: ChangePasswordUseCasePort,
   ) {}
 
-  /**
-   * * return the requester informations by requester Token
-   * @param requesterId Get the userId from the Token
-   * @returns User informations
-   */
   @Get("me")
   @ApiOperation({
     operationId: "me",
@@ -78,18 +77,12 @@ export class UserController {
   })
   @ApiBearerAuth()
   @UseGuards(IsLoggedInGuard)
+  @apiErrorResponses([UserErrors.UserNotFound])
   async me(@GetUserId() requesterId: string): Promise<UserSimpleModel> {
     const output = await this.meUseCase.execute({ id: requesterId })
-
     return MeMapper.toDto(output)
   }
 
-  /**
-   * * Takes the user's information and after validate the information create new User
-   * @param data Necessary data for create user
-   * @returns New User informations or throw error
-   * @throws {UsernameIsDuplicated}
-   */
   @Post("createUser")
   @ApiOperation({
     operationId: "createUser",
@@ -103,41 +96,32 @@ export class UserController {
   })
   @ApiBearerAuth()
   @UseGuards(IsAdminGuard)
+  @apiErrorResponses([UserErrors.UsernameIsDuplicated])
   async createUser(@Body() data: CreateUserRequestDto): Promise<UserSimpleModel> {
     const output = await this.createUserUseCase.execute(data)
     return CreateUserMapper.toDto(output)
   }
 
-  /**
-   * * Takes the information for search and sends the found items
-   * @param data Information for search, pagination, sort
-   * @returns Users found
-   */
-  @Post("readUsers/filter")
+  @Get()
   @ApiOperation({
     operationId: "readUsers",
-    summary: "Found users",
-    description: "Takes the information for search and sends the found items",
+    summary: "List users",
+    description: "Returns users matching the optional query filters, with pagination and sorting.",
   })
-  @ApiBody({ type: ReadUserRequestDto })
   @ApiResponse({
     type: ReadUserResponseDto,
     status: 200,
   })
   @ApiBearerAuth()
-  @UseGuards(IsLoggedInGuard)
-  async readUsersWithFilter(@Body() data: ReadUserRequestDto): Promise<ReadUserResponseDto> {
-    const output = await this.readUsersWithFilterUseCase.execute(data)
-    return ReadeUserWithFilterMapper.toDto(output)
+  @UseGuards(IsAdminGuard)
+  async readUsers(@Query() query: ReadUserRequestDto): Promise<ReadUserResponseDto> {
+    const output = await this.readUsersWithFilterUseCase.execute(
+      ReadUserMapper.toUseCaseInput(query),
+    )
+    return ReadUserMapper.toDto(output)
   }
 
-  /**
-   * * Takes the necessary information for update user and sends the updated user
-   * @param data Necessary data for update user
-   * @returns Updated user Information or throw error
-   * @throws {UserNotFound, UsernameIsDuplicated}
-   */
-  @Put("updateUser")
+  @Post("updateUser")
   @ApiOperation({
     operationId: "updateUser",
     summary: "Updated user",
@@ -150,51 +134,26 @@ export class UserController {
   })
   @ApiBearerAuth()
   @UseGuards(IsAdminGuard)
+  @apiErrorResponses([UserErrors.UserNotFound, UserErrors.UsernameIsDuplicated])
   async updateUser(@Body() data: UpdateUserRequestDto): Promise<UserSimpleModel> {
     const output = await this.updateUserUseCase.execute(data)
     return UpdateUserMapper.toDto(output)
   }
 
-  /**
-   * * Take the information for find user and delete it
-   * @param where Information for find the user
-   * @returns True value or throw Error
-   * @throws {UserNotFound}
-   */
-  @Delete("deleteUser")
+  @Delete(":id")
   @ApiOperation({
     operationId: "deleteUser",
     summary: "Delete user",
-    description: "Take the information for find user and delete it",
+    description: "Soft-deletes the user identified by the path id (sets active to false).",
   })
-  @ApiBody({ type: IdDto })
   @ApiResponse({
     type: SuccessDto,
     status: 200,
   })
   @ApiBearerAuth()
   @UseGuards(IsAdminGuard)
-  async deleteUser(@Body() where: IdDto): Promise<SuccessDto> {
-    return await this.deleteUserUseCase.execute(where)
-  }
-
-  /**
-   * * Take the information for find user and update password
-   * @param input Necessary data for update user's password
-   * @returns True value or throw Error
-   * @throws {UserNotFound}
-   */
-  @Patch("changePassword")
-  @ApiOperation({
-    operationId: "changePassword",
-    summary: "Update user password",
-    description: "Take the information for find user and update password",
-  })
-  @ApiBody({ type: ChangePasswordRequestDto })
-  @ApiResponse({ type: SuccessDto, status: 200 })
-  @ApiBearerAuth()
-  @UseGuards(IsAdminGuard)
-  async changePassword(@Body() data: ChangePasswordRequestDto): Promise<SuccessDto> {
-    return await this.changePasswordUseCase.execute(data)
+  @apiErrorResponses([UserErrors.UserNotFound])
+  async deleteUser(@Param("id", ParseUUIDPipe) id: string): Promise<SuccessDto> {
+    return await this.deleteUserUseCase.execute({ id })
   }
 }

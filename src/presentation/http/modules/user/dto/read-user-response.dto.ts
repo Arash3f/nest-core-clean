@@ -4,19 +4,13 @@ import { Type } from "class-transformer"
 import { IsArray, IsNumber, ValidateNested } from "class-validator"
 
 /**
- * * Data transfers object to Read User Output
+ * Data transfers object to Read User response
  */
 export class ReadUserResponseDto {
-  /**
-   * users count
-   */
   @ApiResponseProperty({ type: Number })
   @IsNumber()
   count: number
 
-  /**
-   * users list
-   */
   @ApiResponseProperty({ type: [UserSimpleModel] })
   @IsArray()
   @Type(() => UserSimpleModel)

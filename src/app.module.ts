@@ -3,10 +3,11 @@ import { Module } from "@nestjs/common"
 import { APP_GUARD } from "@nestjs/core"
 import { TokenGuard } from "@presentation/http/common/guards/token.guard"
 import { AuthHttpModule } from "@presentation/http/modules/auth/auth.module"
+import { HealthHttpModule } from "@presentation/http/modules/health/health.module"
 import { UserHttpModule } from "@presentation/http/modules/user/user.module"
 
 @Module({
-  imports: [InfrastructureModule, AuthHttpModule, UserHttpModule],
+  imports: [InfrastructureModule, AuthHttpModule, UserHttpModule, HealthHttpModule],
   providers: [
     {
       /**

@@ -24,7 +24,8 @@
       "@infrastructure/*": ["src/infrastructure/*"],
       "@application/*": ["src/application/*"],
       "@presentation/*": ["src/presentation/*"],
-      "@src/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "@tests/*": ["tests/*"]
     },
     "noUnusedLocals": true,
     "noUnusedParameters": true,

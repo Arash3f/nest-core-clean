@@ -1,8 +1,8 @@
 import { UserErrors } from "@domain/user/errors/user.exceptions"
 import { EnvConfigService } from "@infrastructure/config/env-config.service"
 import { PrismaService } from "@infrastructure/orm/prisma/prisma.service"
-import { createE2eApp } from "@src/tests/e2e/helpers/e2e-app"
-import { TestApiCaller } from "@src/tests/e2e/helpers/test-utils"
+import { createE2eApp } from "@tests/e2e/helpers/e2e-app"
+import { TestApiCaller } from "@tests/e2e/helpers/test-utils"
 import type { INestApplication } from "@nestjs/common"
 
 describe("User (REST e2e)", () => {

@@ -1,77 +1,77 @@
 /* eslint-disable */
 
 export const AllTypesProps: Record<string,any> = {
-	ChangeMyPasswordRequestDto:{
-
-	},
-	ChangePasswordRequestDto:{
-
-	},
-	CreateUserRequestDto:{
-		role:"Role"
-	},
-	IdDto:{
-
-	},
-	LoginRequestDto:{
-
-	},
-	Mutation:{
-		changeMyPassword:{
-			data:"ChangeMyPasswordRequestDto"
-		},
-		changePassword:{
-			data:"ChangePasswordRequestDto",
-			where:"IdDto"
-		},
-		createUser:{
-			data:"CreateUserRequestDto"
-		},
-		deleteUser:{
-			where:"IdDto"
-		},
-		logIn:{
-			data:"LoginRequestDto"
-		},
-		refreshToken:{
-			data:"RefreshTokenRequestDto"
-		},
-		register:{
-			data:"RegisterRequestDto"
-		},
-		updateMe:{
-			data:"UpdateMeRequestDto"
-		},
-		updateUser:{
-			data:"UpdateUserRequestDataDto",
-			where:"IdDto"
-		}
-	},
-	PaginationDto:{
-
-	},
+	Role: "enum" as const,
 	Query:{
 		readUsers:{
+			where:"ReadUserWhereRequestDto",
 			pagination:"PaginationDto",
-			sortBy:"SortByDto",
-			where:"ReadUserWhereRequestDto"
+			sortBy:"SortByDto"
 		}
 	},
 	ReadUserWhereRequestDto:{
 		role:"Role"
 	},
-	RefreshTokenRequestDto:{
+	PaginationDto:{
+
+	},
+	SortByDto:{
+
+	},
+	Mutation:{
+		logIn:{
+			data:"LoginRequestDto"
+		},
+		register:{
+			data:"RegisterRequestDto"
+		},
+		changePassword:{
+			data:"ChangePasswordRequestDto",
+			where:"IdDto"
+		},
+		changeMyPassword:{
+			data:"ChangeMyPasswordRequestDto"
+		},
+		refreshToken:{
+			data:"RefreshTokenRequestDto"
+		},
+		updateMe:{
+			data:"UpdateMeRequestDto"
+		},
+		createUser:{
+			data:"CreateUserRequestDto"
+		},
+		updateUser:{
+			data:"UpdateUserRequestDataDto",
+			where:"IdDto"
+		},
+		deleteUser:{
+			where:"IdDto"
+		}
+	},
+	LoginRequestDto:{
 
 	},
 	RegisterRequestDto:{
 
 	},
-	Role: "enum" as const,
-	SortByDto:{
+	ChangePasswordRequestDto:{
+
+	},
+	IdDto:{
+
+	},
+	ChangeMyPasswordRequestDto:{
+
+	},
+	RefreshTokenRequestDto:{
 
 	},
 	UpdateMeRequestDto:{
 
+	},
+	CreateUserRequestDto:{
+		role:"Role"
 	},
 	UpdateUserRequestDataDto:{
 		role:"Role"
@@ -80,39 +80,39 @@ export const AllTypesProps: Record<string,any> = {
 }
 
 export const ReturnTypes: Record<string,any> = {
+	SuccessDto:{
+		success:"Boolean"
+	},
 	LoginResponseDto:{
 		accessToken:"String",
 		refreshToken:"String"
 	},
-	Mutation:{
-		changeMyPassword:"SuccessDto",
-		changePassword:"SuccessDto",
-		createUser:"UserModel",
-		deleteUser:"SuccessDto",
-		logIn:"LoginResponseDto",
-		logout:"SuccessDto",
-		refreshToken:"LoginResponseDto",
-		register:"LoginResponseDto",
-		updateMe:"UserModel",
-		updateUser:"UserModel"
-	},
-	Query:{
-		me:"UserModel",
-		readUsers:"ReadUserResponseDto"
+	UserModel:{
+		id:"ID",
+		name:"String",
+		username:"String",
+		active:"Boolean",
+		role:"Role"
 	},
 	ReadUserResponseDto:{
 		count:"Int",
 		data:"UserModel"
 	},
-	SuccessDto:{
-		success:"Boolean"
+	Query:{
+		me:"UserModel",
+		readUsers:"ReadUserResponseDto"
 	},
-	UserModel:{
-		active:"Boolean",
-		id:"ID",
-		name:"String",
-		role:"Role",
-		username:"String"
+	Mutation:{
+		logIn:"LoginResponseDto",
+		register:"LoginResponseDto",
+		logout:"SuccessDto",
+		changePassword:"SuccessDto",
+		changeMyPassword:"SuccessDto",
+		refreshToken:"LoginResponseDto",
+		updateMe:"UserModel",
+		createUser:"UserModel",
+		updateUser:"UserModel",
+		deleteUser:"SuccessDto"
 	},
 	ID: `scalar.ID` as const
 }

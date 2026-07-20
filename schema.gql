@@ -1,0 +1,113 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type SuccessDto {
+  success: Boolean!
+}
+
+type LoginResponseDto {
+  accessToken: String!
+  refreshToken: String!
+}
+
+type UserModel {
+  id: ID!
+  name: String!
+  username: String!
+  active: Boolean!
+  role: Role!
+}
+
+enum Role {
+  Admin
+  Member
+}
+
+type ReadUserResponseDto {
+  count: Int!
+  data: [UserModel!]!
+}
+
+type Query {
+  me: UserModel!
+  readUsers(where: ReadUserWhereRequestDto, pagination: PaginationDto, sortBy: SortByDto): ReadUserResponseDto!
+}
+
+input ReadUserWhereRequestDto {
+  id: ID
+  username: String
+  name: String
+  role: Role
+  active: Boolean
+}
+
+input PaginationDto {
+  take: Int = 10
+  skip: Int = 0
+}
+
+input SortByDto {
+  field: String
+  descending: Boolean = true
+}
+
+type Mutation {
+  logIn(data: LoginRequestDto!): LoginResponseDto!
+  register(data: RegisterRequestDto!): LoginResponseDto!
+  logout: SuccessDto!
+  changePassword(data: ChangePasswordRequestDto!, where: IdDto!): SuccessDto!
+  changeMyPassword(data: ChangeMyPasswordRequestDto!): SuccessDto!
+  refreshToken(data: RefreshTokenRequestDto!): LoginResponseDto!
+  updateMe(data: UpdateMeRequestDto!): UserModel!
+  createUser(data: CreateUserRequestDto!): UserModel!
+  updateUser(data: UpdateUserRequestDataDto!, where: IdDto!): UserModel!
+  deleteUser(where: IdDto!): SuccessDto!
+}
+
+input LoginRequestDto {
+  username: String!
+  password: String!
+}
+
+input RegisterRequestDto {
+  name: String!
+  username: String!
+  password: String!
+}
+
+input ChangePasswordRequestDto {
+  newPassword: String!
+}
+
+input IdDto {
+  id: String!
+}
+
+input ChangeMyPasswordRequestDto {
+  currentPassword: String!
+  newPassword: String!
+}
+
+input RefreshTokenRequestDto {
+  refreshToken: String!
+}
+
+input UpdateMeRequestDto {
+  name: String
+  username: String
+}
+
+input CreateUserRequestDto {
+  name: String!
+  username: String!
+  password: String!
+  role: Role!
+}
+
+input UpdateUserRequestDataDto {
+  username: String
+  active: Boolean
+  role: Role
+  name: String
+}

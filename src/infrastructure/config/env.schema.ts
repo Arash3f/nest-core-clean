@@ -8,6 +8,9 @@ export class EnvSchema {
   @IsString()
   SWAGGER_PATH: string
 
+  @IsString()
+  CORS_ORIGINS: string
+
   @IsNumber()
   SERVER_PORT: number
 

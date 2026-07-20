@@ -7,7 +7,7 @@ module.exports = {
   testEnvironment: "node",
   maxWorkers: 1,
   coverageDirectory: "./coverage",
-  coverageReporters: ["html"],
+  coverageReporters: ["html", "lcov", "text-summary"],
   coveragePathIgnorePatterns: ["<rootDir>/swagger", "<rootDir>/tests/utils"],
   transformIgnorePatterns: ["/node_modules/\\.pnpm/(?!uuid@)"],
   transform: {

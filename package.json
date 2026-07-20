@@ -1,13 +1,16 @@
 {
-  "name": "nest-clean",
-  "version": "0.0.1",
-  "description": "NestJs Core Clean",
+  "name": "nest-js-core-clean",
+  "version": "1.0.0",
+  "description": "NestJs Core Clean Architecture",
   "author": "Arash Alfooneh",
   "private": true,
+  "packageManager": "pnpm@10.33.0",
   "license": "MIT",
   "scripts": {
     "prepare": "husky",
+    "cz": "cz",
     "lint": "eslint \"{src,apps,libs,tests}/**/*.ts\" --fix -f stylish",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
     "prisma:studio:dev": "env-cmd -f ./.env.dev pnpm prisma studio",
     "prisma:generate:dev": "env-cmd -f ./.env.dev prisma generate",
@@ -23,8 +26,8 @@
     "start:dev:docker": "nest start --webpack --webpackPath ./webpack-hmr.config.js --watch",
     "test": "env-cmd -f ./.env.test jest --config jest.config.js --detectOpenHandles --forceExit",
     "test:cov": "env-cmd -f ./.env.test jest --config jest.config.js --detectOpenHandles --forceExit --coverage",
-    "api": "env-cmd -f ./.env.dev npx ts-node scripts/generate-api.ts",
-    "zeus": "npx ts-node scripts/zeus.ts",
+    "api": "pnpm exec ts-node scripts/zeus.ts",
+    "swagger": "env-cmd -f ./.env.dev pnpm exec ts-node scripts/generate-api.ts",
     "commit": "cz"
   },
   "dependencies": {
@@ -98,6 +101,10 @@
   },
   "lint-staged": {
     "src/**/*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "tests/**/*.{js,ts}": [
       "eslint --fix",
       "prettier --write"
     ]

@@ -34,6 +34,14 @@ export class EnvConfigService {
     return this.configService.get<string>("SWAGGER_PATH", "/swagger")
   }
 
+  get corsOrigins(): string[] {
+    const raw: string = this.configService.getOrThrow("CORS_ORIGINS")
+    return raw
+      .split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean)
+  }
+
   get jwtSecret(): string {
     return this.configService.get<string>("JWT_SECRET") as string
   }

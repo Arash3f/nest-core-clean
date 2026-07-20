@@ -16,6 +16,8 @@ module.exports = tseslint.config(
       "*.config.cjs",
       "**/*.spec.ts",
       "**/*.test.ts",
+      "tests/utils/graphql/**",
+      "swagger/**",
     ],
   },
   ...tseslint.configs.recommended,
@@ -26,7 +28,10 @@ module.exports = tseslint.config(
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: resolve(process.cwd(), "./tsconfig.json"),
+        project: [
+          resolve(process.cwd(), "./tsconfig.json"),
+          resolve(process.cwd(), "./tsconfig.spec.json"),
+        ],
         tsconfigRootDir: process.cwd(),
         ecmaVersion: 2022,
         sourceType: "module",

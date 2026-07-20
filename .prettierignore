@@ -1,0 +1,2 @@
+# Generated GraphQL client — keep Zeus output as-is for CI drift checks
+tests/utils/graphql/**

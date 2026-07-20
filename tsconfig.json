@@ -46,8 +46,7 @@
     "src/**/*",
     "scripts/**/*",
     "webpack-hmr.config.js",
-    "prisma.config.ts",
-    "tests/**/*"
+    "prisma.config.ts"
   ],
-  "exclude": ["dist", "node_modules", "doc", "coverage", "zeus", "swagger"]
+  "exclude": ["dist", "node_modules", "doc", "coverage", "tests", "swagger"]
 }

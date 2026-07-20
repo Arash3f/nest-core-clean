@@ -31,7 +31,7 @@ async function bootstrap() {
 
   setupGlobalValidation(app, configService)
   setupSwagger(app, configService)
-  setupCors(app)
+  setupCors(app, configService)
   setupLogger(app, configService)
 
   /**
@@ -88,10 +88,14 @@ function setupLogger(app: NestExpressApplication, configService: EnvConfigServic
  * @returns The generated OpenAPI document.
  */
 function setupSwagger(app: NestExpressApplication, configService: EnvConfigService) {
+  if (configService.isProduction) {
+    return undefined
+  }
+
   const config = new DocumentBuilder()
-    .setTitle("My Project APIs")
-    .setDescription("The Project APIs description")
-    .setVersion("1.0")
+    .setTitle("NestJS Core Clean")
+    .setDescription("Clean Architecture NestJS starter with REST and GraphQL")
+    .setVersion("1.0.0")
     .addBearerAuth()
     .build()
 
@@ -111,9 +115,17 @@ function setupSwagger(app: NestExpressApplication, configService: EnvConfigServi
  * Enables Cross-Origin Resource Sharing (CORS).
  *
  * @param app - NestJS application instance.
+ * @param configService - Configuration provider.
  */
-function setupCors(app: NestExpressApplication) {
-  app.enableCors()
+function setupCors(app: NestExpressApplication, configService: EnvConfigService) {
+  const origins = configService.corsOrigins
+
+  if (origins.length === 1 && origins[0] === "*") {
+    app.enableCors()
+    return
+  }
+
+  app.enableCors({ origin: origins, credentials: true })
 }
 
 /**
@@ -125,6 +137,7 @@ function setupCors(app: NestExpressApplication) {
  * @remarks
  * - `transform: true` converts input payloads to DTO instances/types.
  * - `whitelist: true` removes unknown properties not present on the DTO.
+ * - `forbidNonWhitelisted: true` rejects unknown properties with a 400.
  */
 function setupGlobalValidation(app: NestExpressApplication, configService: EnvConfigService) {
   app.useGlobalFilters(new CoreExceptionFilter(configService))
@@ -132,6 +145,7 @@ function setupGlobalValidation(app: NestExpressApplication, configService: EnvCo
     new ValidationPipe({
       transform: true,
       whitelist: true,
+      forbidNonWhitelisted: true,
     }),
   )
 }

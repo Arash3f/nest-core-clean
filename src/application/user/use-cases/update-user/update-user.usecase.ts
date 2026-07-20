@@ -4,6 +4,7 @@ import { DomainException } from "@domain/common/errors/domain.exception"
 import { UserErrors } from "@domain/user/errors/user.exceptions"
 import { USER_REPOSITORY_PORT, UsersRepositoryPort } from "@domain/user/ports/user-repository.port"
 import { Inject, Injectable } from "@nestjs/common"
+import cleanDeep from "clean-deep"
 
 @Injectable()
 export class UpdateUserUseCase {
@@ -19,7 +20,19 @@ export class UpdateUserUseCase {
       throw new DomainException(UserErrors.UserNotFound)
     }
 
-    const updated = await this.usersRepo.update(user.id, input.data)
+    const username = input.data.username?.toLowerCase()
+    if (username && username !== user.username) {
+      const dup = await this.usersRepo.findByUsername(username)
+      if (dup) throw new DomainException(UserErrors.UsernameIsDuplicated)
+    }
+
+    const updated = await this.usersRepo.update(
+      user.id,
+      cleanDeep({
+        ...input.data,
+        username,
+      }),
+    )
 
     return {
       id: updated.id,

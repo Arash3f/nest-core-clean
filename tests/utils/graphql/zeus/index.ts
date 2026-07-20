@@ -1079,204 +1079,204 @@ export type ScalarCoders = {
 type ZEUS_UNIONS = never
 
 export type ValueTypes = {
-    ["ChangeMyPasswordRequestDto"]: {
-	currentPassword: string | Variable<any, string>,
-	newPassword: string | Variable<any, string>
-};
-	["ChangePasswordRequestDto"]: {
-	newPassword: string | Variable<any, string>
-};
-	["CreateUserRequestDto"]: {
-	name: string | Variable<any, string>,
-	password: string | Variable<any, string>,
-	role: ValueTypes["Role"] | Variable<any, string>,
-	username: string | Variable<any, string>
-};
-	["IdDto"]: {
-	id: string | Variable<any, string>
-};
-	["LoginRequestDto"]: {
-	password: string | Variable<any, string>,
-	username: string | Variable<any, string>
-};
+    ["SuccessDto"]: AliasType<{
+	success?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`,
+	['...on SuccessDto']?: Omit<ValueTypes["SuccessDto"], "...on SuccessDto">
+}>;
 	["LoginResponseDto"]: AliasType<{
 	accessToken?:boolean | `@${string}`,
 	refreshToken?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`,
 	['...on LoginResponseDto']?: Omit<ValueTypes["LoginResponseDto"], "...on LoginResponseDto">
 }>;
-	["Mutation"]: AliasType<{
-changeMyPassword?: [{	data: ValueTypes["ChangeMyPasswordRequestDto"] | Variable<any, string>},ValueTypes["SuccessDto"]],
-changePassword?: [{	data: ValueTypes["ChangePasswordRequestDto"] | Variable<any, string>,	where: ValueTypes["IdDto"] | Variable<any, string>},ValueTypes["SuccessDto"]],
-createUser?: [{	data: ValueTypes["CreateUserRequestDto"] | Variable<any, string>},ValueTypes["UserModel"]],
-deleteUser?: [{	where: ValueTypes["IdDto"] | Variable<any, string>},ValueTypes["SuccessDto"]],
-logIn?: [{	data: ValueTypes["LoginRequestDto"] | Variable<any, string>},ValueTypes["LoginResponseDto"]],
-	logout?:ValueTypes["SuccessDto"],
-refreshToken?: [{	data: ValueTypes["RefreshTokenRequestDto"] | Variable<any, string>},ValueTypes["LoginResponseDto"]],
-register?: [{	data: ValueTypes["RegisterRequestDto"] | Variable<any, string>},ValueTypes["LoginResponseDto"]],
-updateMe?: [{	data: ValueTypes["UpdateMeRequestDto"] | Variable<any, string>},ValueTypes["UserModel"]],
-updateUser?: [{	data: ValueTypes["UpdateUserRequestDataDto"] | Variable<any, string>,	where: ValueTypes["IdDto"] | Variable<any, string>},ValueTypes["UserModel"]],
+	["UserModel"]: AliasType<{
+	id?:boolean | `@${string}`,
+	name?:boolean | `@${string}`,
+	username?:boolean | `@${string}`,
+	active?:boolean | `@${string}`,
+	role?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`,
-	['...on Mutation']?: Omit<ValueTypes["Mutation"], "...on Mutation">
+	['...on UserModel']?: Omit<ValueTypes["UserModel"], "...on UserModel">
 }>;
-	["PaginationDto"]: {
-	skip?: number | undefined | null | Variable<any, string>,
-	take?: number | undefined | null | Variable<any, string>
-};
-	["Query"]: AliasType<{
-	me?:ValueTypes["UserModel"],
-readUsers?: [{	pagination?: ValueTypes["PaginationDto"] | undefined | null | Variable<any, string>,	sortBy?: ValueTypes["SortByDto"] | undefined | null | Variable<any, string>,	where?: ValueTypes["ReadUserWhereRequestDto"] | undefined | null | Variable<any, string>},ValueTypes["ReadUserResponseDto"]],
-		__typename?: boolean | `@${string}`,
-	['...on Query']?: Omit<ValueTypes["Query"], "...on Query">
-}>;
+	["Role"]:Role;
 	["ReadUserResponseDto"]: AliasType<{
 	count?:boolean | `@${string}`,
 	data?:ValueTypes["UserModel"],
 		__typename?: boolean | `@${string}`,
 	['...on ReadUserResponseDto']?: Omit<ValueTypes["ReadUserResponseDto"], "...on ReadUserResponseDto">
 }>;
+	["Query"]: AliasType<{
+	me?:ValueTypes["UserModel"],
+readUsers?: [{	where?: ValueTypes["ReadUserWhereRequestDto"] | undefined | null | Variable<any, string>,	pagination?: ValueTypes["PaginationDto"] | undefined | null | Variable<any, string>,	sortBy?: ValueTypes["SortByDto"] | undefined | null | Variable<any, string>},ValueTypes["ReadUserResponseDto"]],
+		__typename?: boolean | `@${string}`,
+	['...on Query']?: Omit<ValueTypes["Query"], "...on Query">
+}>;
 	["ReadUserWhereRequestDto"]: {
-	active?: boolean | undefined | null | Variable<any, string>,
 	id?: ValueTypes["ID"] | undefined | null | Variable<any, string>,
+	username?: string | undefined | null | Variable<any, string>,
 	name?: string | undefined | null | Variable<any, string>,
 	role?: ValueTypes["Role"] | undefined | null | Variable<any, string>,
-	username?: string | undefined | null | Variable<any, string>
+	active?: boolean | undefined | null | Variable<any, string>
+};
+	["PaginationDto"]: {
+	take?: number | undefined | null | Variable<any, string>,
+	skip?: number | undefined | null | Variable<any, string>
+};
+	["SortByDto"]: {
+	field?: string | undefined | null | Variable<any, string>,
+	descending?: boolean | undefined | null | Variable<any, string>
+};
+	["Mutation"]: AliasType<{
+logIn?: [{	data: ValueTypes["LoginRequestDto"] | Variable<any, string>},ValueTypes["LoginResponseDto"]],
+register?: [{	data: ValueTypes["RegisterRequestDto"] | Variable<any, string>},ValueTypes["LoginResponseDto"]],
+	logout?:ValueTypes["SuccessDto"],
+changePassword?: [{	data: ValueTypes["ChangePasswordRequestDto"] | Variable<any, string>,	where: ValueTypes["IdDto"] | Variable<any, string>},ValueTypes["SuccessDto"]],
+changeMyPassword?: [{	data: ValueTypes["ChangeMyPasswordRequestDto"] | Variable<any, string>},ValueTypes["SuccessDto"]],
+refreshToken?: [{	data: ValueTypes["RefreshTokenRequestDto"] | Variable<any, string>},ValueTypes["LoginResponseDto"]],
+updateMe?: [{	data: ValueTypes["UpdateMeRequestDto"] | Variable<any, string>},ValueTypes["UserModel"]],
+createUser?: [{	data: ValueTypes["CreateUserRequestDto"] | Variable<any, string>},ValueTypes["UserModel"]],
+updateUser?: [{	data: ValueTypes["UpdateUserRequestDataDto"] | Variable<any, string>,	where: ValueTypes["IdDto"] | Variable<any, string>},ValueTypes["UserModel"]],
+deleteUser?: [{	where: ValueTypes["IdDto"] | Variable<any, string>},ValueTypes["SuccessDto"]],
+		__typename?: boolean | `@${string}`,
+	['...on Mutation']?: Omit<ValueTypes["Mutation"], "...on Mutation">
+}>;
+	["LoginRequestDto"]: {
+	username: string | Variable<any, string>,
+	password: string | Variable<any, string>
+};
+	["RegisterRequestDto"]: {
+	name: string | Variable<any, string>,
+	username: string | Variable<any, string>,
+	password: string | Variable<any, string>
+};
+	["ChangePasswordRequestDto"]: {
+	newPassword: string | Variable<any, string>
+};
+	["IdDto"]: {
+	id: string | Variable<any, string>
+};
+	["ChangeMyPasswordRequestDto"]: {
+	currentPassword: string | Variable<any, string>,
+	newPassword: string | Variable<any, string>
 };
 	["RefreshTokenRequestDto"]: {
 	refreshToken: string | Variable<any, string>
 };
-	["RegisterRequestDto"]: {
-	name: string | Variable<any, string>,
-	password: string | Variable<any, string>,
-	username: string | Variable<any, string>
-};
-	["Role"]:Role;
-	["SortByDto"]: {
-	descending?: boolean | undefined | null | Variable<any, string>,
-	field?: string | undefined | null | Variable<any, string>
-};
-	["SuccessDto"]: AliasType<{
-	success?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`,
-	['...on SuccessDto']?: Omit<ValueTypes["SuccessDto"], "...on SuccessDto">
-}>;
 	["UpdateMeRequestDto"]: {
 	name?: string | undefined | null | Variable<any, string>,
 	username?: string | undefined | null | Variable<any, string>
 };
-	["UpdateUserRequestDataDto"]: {
-	active: boolean | Variable<any, string>,
+	["CreateUserRequestDto"]: {
 	name: string | Variable<any, string>,
-	role?: ValueTypes["Role"] | undefined | null | Variable<any, string>,
-	username: string | Variable<any, string>
+	username: string | Variable<any, string>,
+	password: string | Variable<any, string>,
+	role: ValueTypes["Role"] | Variable<any, string>
 };
-	["UserModel"]: AliasType<{
-	active?:boolean | `@${string}`,
-	id?:boolean | `@${string}`,
-	name?:boolean | `@${string}`,
-	role?:boolean | `@${string}`,
-	username?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`,
-	['...on UserModel']?: Omit<ValueTypes["UserModel"], "...on UserModel">
-}>;
+	["UpdateUserRequestDataDto"]: {
+	username?: string | undefined | null | Variable<any, string>,
+	active?: boolean | undefined | null | Variable<any, string>,
+	role?: ValueTypes["Role"] | undefined | null | Variable<any, string>,
+	name?: string | undefined | null | Variable<any, string>
+};
 	["ID"]:unknown
   }
 
 export type ResolverInputTypes = {
-    ["ChangeMyPasswordRequestDto"]: {
-	currentPassword: string,
-	newPassword: string
-};
-	["ChangePasswordRequestDto"]: {
-	newPassword: string
-};
-	["CreateUserRequestDto"]: {
-	name: string,
-	password: string,
-	role: ResolverInputTypes["Role"],
-	username: string
-};
-	["IdDto"]: {
-	id: string
-};
-	["LoginRequestDto"]: {
-	password: string,
-	username: string
-};
+    ["SuccessDto"]: AliasType<{
+	success?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["LoginResponseDto"]: AliasType<{
 	accessToken?:boolean | `@${string}`,
 	refreshToken?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	["Mutation"]: AliasType<{
-changeMyPassword?: [{	data: ResolverInputTypes["ChangeMyPasswordRequestDto"]},ResolverInputTypes["SuccessDto"]],
-changePassword?: [{	data: ResolverInputTypes["ChangePasswordRequestDto"],	where: ResolverInputTypes["IdDto"]},ResolverInputTypes["SuccessDto"]],
-createUser?: [{	data: ResolverInputTypes["CreateUserRequestDto"]},ResolverInputTypes["UserModel"]],
-deleteUser?: [{	where: ResolverInputTypes["IdDto"]},ResolverInputTypes["SuccessDto"]],
-logIn?: [{	data: ResolverInputTypes["LoginRequestDto"]},ResolverInputTypes["LoginResponseDto"]],
-	logout?:ResolverInputTypes["SuccessDto"],
-refreshToken?: [{	data: ResolverInputTypes["RefreshTokenRequestDto"]},ResolverInputTypes["LoginResponseDto"]],
-register?: [{	data: ResolverInputTypes["RegisterRequestDto"]},ResolverInputTypes["LoginResponseDto"]],
-updateMe?: [{	data: ResolverInputTypes["UpdateMeRequestDto"]},ResolverInputTypes["UserModel"]],
-updateUser?: [{	data: ResolverInputTypes["UpdateUserRequestDataDto"],	where: ResolverInputTypes["IdDto"]},ResolverInputTypes["UserModel"]],
+	["UserModel"]: AliasType<{
+	id?:boolean | `@${string}`,
+	name?:boolean | `@${string}`,
+	username?:boolean | `@${string}`,
+	active?:boolean | `@${string}`,
+	role?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	["PaginationDto"]: {
-	skip?: number | undefined | null,
-	take?: number | undefined | null
-};
-	["Query"]: AliasType<{
-	me?:ResolverInputTypes["UserModel"],
-readUsers?: [{	pagination?: ResolverInputTypes["PaginationDto"] | undefined | null,	sortBy?: ResolverInputTypes["SortByDto"] | undefined | null,	where?: ResolverInputTypes["ReadUserWhereRequestDto"] | undefined | null},ResolverInputTypes["ReadUserResponseDto"]],
-		__typename?: boolean | `@${string}`
-}>;
+	["Role"]:Role;
 	["ReadUserResponseDto"]: AliasType<{
 	count?:boolean | `@${string}`,
 	data?:ResolverInputTypes["UserModel"],
 		__typename?: boolean | `@${string}`
 }>;
+	["Query"]: AliasType<{
+	me?:ResolverInputTypes["UserModel"],
+readUsers?: [{	where?: ResolverInputTypes["ReadUserWhereRequestDto"] | undefined | null,	pagination?: ResolverInputTypes["PaginationDto"] | undefined | null,	sortBy?: ResolverInputTypes["SortByDto"] | undefined | null},ResolverInputTypes["ReadUserResponseDto"]],
+		__typename?: boolean | `@${string}`
+}>;
 	["ReadUserWhereRequestDto"]: {
-	active?: boolean | undefined | null,
 	id?: ResolverInputTypes["ID"] | undefined | null,
+	username?: string | undefined | null,
 	name?: string | undefined | null,
 	role?: ResolverInputTypes["Role"] | undefined | null,
-	username?: string | undefined | null
+	active?: boolean | undefined | null
+};
+	["PaginationDto"]: {
+	take?: number | undefined | null,
+	skip?: number | undefined | null
+};
+	["SortByDto"]: {
+	field?: string | undefined | null,
+	descending?: boolean | undefined | null
+};
+	["Mutation"]: AliasType<{
+logIn?: [{	data: ResolverInputTypes["LoginRequestDto"]},ResolverInputTypes["LoginResponseDto"]],
+register?: [{	data: ResolverInputTypes["RegisterRequestDto"]},ResolverInputTypes["LoginResponseDto"]],
+	logout?:ResolverInputTypes["SuccessDto"],
+changePassword?: [{	data: ResolverInputTypes["ChangePasswordRequestDto"],	where: ResolverInputTypes["IdDto"]},ResolverInputTypes["SuccessDto"]],
+changeMyPassword?: [{	data: ResolverInputTypes["ChangeMyPasswordRequestDto"]},ResolverInputTypes["SuccessDto"]],
+refreshToken?: [{	data: ResolverInputTypes["RefreshTokenRequestDto"]},ResolverInputTypes["LoginResponseDto"]],
+updateMe?: [{	data: ResolverInputTypes["UpdateMeRequestDto"]},ResolverInputTypes["UserModel"]],
+createUser?: [{	data: ResolverInputTypes["CreateUserRequestDto"]},ResolverInputTypes["UserModel"]],
+updateUser?: [{	data: ResolverInputTypes["UpdateUserRequestDataDto"],	where: ResolverInputTypes["IdDto"]},ResolverInputTypes["UserModel"]],
+deleteUser?: [{	where: ResolverInputTypes["IdDto"]},ResolverInputTypes["SuccessDto"]],
+		__typename?: boolean | `@${string}`
+}>;
+	["LoginRequestDto"]: {
+	username: string,
+	password: string
+};
+	["RegisterRequestDto"]: {
+	name: string,
+	username: string,
+	password: string
+};
+	["ChangePasswordRequestDto"]: {
+	newPassword: string
+};
+	["IdDto"]: {
+	id: string
+};
+	["ChangeMyPasswordRequestDto"]: {
+	currentPassword: string,
+	newPassword: string
 };
 	["RefreshTokenRequestDto"]: {
 	refreshToken: string
 };
-	["RegisterRequestDto"]: {
-	name: string,
-	password: string,
-	username: string
-};
-	["Role"]:Role;
-	["SortByDto"]: {
-	descending?: boolean | undefined | null,
-	field?: string | undefined | null
-};
-	["SuccessDto"]: AliasType<{
-	success?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
 	["UpdateMeRequestDto"]: {
 	name?: string | undefined | null,
 	username?: string | undefined | null
 };
-	["UpdateUserRequestDataDto"]: {
-	active: boolean,
+	["CreateUserRequestDto"]: {
 	name: string,
-	role?: ResolverInputTypes["Role"] | undefined | null,
-	username: string
+	username: string,
+	password: string,
+	role: ResolverInputTypes["Role"]
 };
-	["UserModel"]: AliasType<{
-	active?:boolean | `@${string}`,
-	id?:boolean | `@${string}`,
-	name?:boolean | `@${string}`,
-	role?:boolean | `@${string}`,
-	username?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
+	["UpdateUserRequestDataDto"]: {
+	username?: string | undefined | null,
+	active?: boolean | undefined | null,
+	role?: ResolverInputTypes["Role"] | undefined | null,
+	name?: string | undefined | null
+};
 	["schema"]: AliasType<{
 	query?:ResolverInputTypes["Query"],
 	mutation?:ResolverInputTypes["Mutation"],
@@ -1286,93 +1286,93 @@ readUsers?: [{	pagination?: ResolverInputTypes["PaginationDto"] | undefined | nu
   }
 
 export type ModelTypes = {
-    ["ChangeMyPasswordRequestDto"]: {
-	currentPassword: string,
-	newPassword: string
-};
-	["ChangePasswordRequestDto"]: {
-	newPassword: string
-};
-	["CreateUserRequestDto"]: {
-	name: string,
-	password: string,
-	role: ModelTypes["Role"],
-	username: string
-};
-	["IdDto"]: {
-	id: string
-};
-	["LoginRequestDto"]: {
-	password: string,
-	username: string
+    ["SuccessDto"]: {
+		success: boolean
 };
 	["LoginResponseDto"]: {
 		accessToken: string,
 	refreshToken: string
 };
-	["Mutation"]: {
-		changeMyPassword: ModelTypes["SuccessDto"],
-	changePassword: ModelTypes["SuccessDto"],
-	createUser: ModelTypes["UserModel"],
-	deleteUser: ModelTypes["SuccessDto"],
-	logIn: ModelTypes["LoginResponseDto"],
-	logout: ModelTypes["SuccessDto"],
-	refreshToken: ModelTypes["LoginResponseDto"],
-	register: ModelTypes["LoginResponseDto"],
-	updateMe: ModelTypes["UserModel"],
-	updateUser: ModelTypes["UserModel"]
+	["UserModel"]: {
+		id: ModelTypes["ID"],
+	name: string,
+	username: string,
+	active: boolean,
+	role: ModelTypes["Role"]
 };
-	["PaginationDto"]: {
-	skip?: number | undefined | null,
-	take?: number | undefined | null
+	["Role"]:Role;
+	["ReadUserResponseDto"]: {
+		count: number,
+	data: Array<ModelTypes["UserModel"]>
 };
 	["Query"]: {
 		me: ModelTypes["UserModel"],
 	readUsers: ModelTypes["ReadUserResponseDto"]
 };
-	["ReadUserResponseDto"]: {
-		count: number,
-	data: Array<ModelTypes["UserModel"]>
-};
 	["ReadUserWhereRequestDto"]: {
-	active?: boolean | undefined | null,
 	id?: ModelTypes["ID"] | undefined | null,
+	username?: string | undefined | null,
 	name?: string | undefined | null,
 	role?: ModelTypes["Role"] | undefined | null,
-	username?: string | undefined | null
+	active?: boolean | undefined | null
 };
-	["RefreshTokenRequestDto"]: {
-	refreshToken: string
+	["PaginationDto"]: {
+	take?: number | undefined | null,
+	skip?: number | undefined | null
+};
+	["SortByDto"]: {
+	field?: string | undefined | null,
+	descending?: boolean | undefined | null
+};
+	["Mutation"]: {
+		logIn: ModelTypes["LoginResponseDto"],
+	register: ModelTypes["LoginResponseDto"],
+	logout: ModelTypes["SuccessDto"],
+	changePassword: ModelTypes["SuccessDto"],
+	changeMyPassword: ModelTypes["SuccessDto"],
+	refreshToken: ModelTypes["LoginResponseDto"],
+	updateMe: ModelTypes["UserModel"],
+	createUser: ModelTypes["UserModel"],
+	updateUser: ModelTypes["UserModel"],
+	deleteUser: ModelTypes["SuccessDto"]
+};
+	["LoginRequestDto"]: {
+	username: string,
+	password: string
 };
 	["RegisterRequestDto"]: {
 	name: string,
-	password: string,
-	username: string
+	username: string,
+	password: string
 };
-	["Role"]:Role;
-	["SortByDto"]: {
-	descending?: boolean | undefined | null,
-	field?: string | undefined | null
+	["ChangePasswordRequestDto"]: {
+	newPassword: string
 };
-	["SuccessDto"]: {
-		success: boolean
+	["IdDto"]: {
+	id: string
+};
+	["ChangeMyPasswordRequestDto"]: {
+	currentPassword: string,
+	newPassword: string
+};
+	["RefreshTokenRequestDto"]: {
+	refreshToken: string
 };
 	["UpdateMeRequestDto"]: {
 	name?: string | undefined | null,
 	username?: string | undefined | null
 };
-	["UpdateUserRequestDataDto"]: {
-	active: boolean,
+	["CreateUserRequestDto"]: {
 	name: string,
-	role?: ModelTypes["Role"] | undefined | null,
-	username: string
+	username: string,
+	password: string,
+	role: ModelTypes["Role"]
 };
-	["UserModel"]: {
-		active: boolean,
-	id: ModelTypes["ID"],
-	name: string,
-	role: ModelTypes["Role"],
-	username: string
+	["UpdateUserRequestDataDto"]: {
+	username?: string | undefined | null,
+	active?: boolean | undefined | null,
+	role?: ModelTypes["Role"] | undefined | null,
+	name?: string | undefined | null
 };
 	["schema"]: {
 	query?: ModelTypes["Query"] | undefined | null,
@@ -1385,25 +1385,10 @@ export type GraphQLTypes = {
     // ------------------------------------------------------;
 	// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY);
 	// ------------------------------------------------------;
-	["ChangeMyPasswordRequestDto"]: {
-		currentPassword: string,
-	newPassword: string
-};
-	["ChangePasswordRequestDto"]: {
-		newPassword: string
-};
-	["CreateUserRequestDto"]: {
-		name: string,
-	password: string,
-	role: GraphQLTypes["Role"],
-	username: string
-};
-	["IdDto"]: {
-		id: string
-};
-	["LoginRequestDto"]: {
-		password: string,
-	username: string
+	["SuccessDto"]: {
+	__typename: "SuccessDto",
+	success: boolean,
+	['...on SuccessDto']: Omit<GraphQLTypes["SuccessDto"], "...on SuccessDto">
 };
 	["LoginResponseDto"]: {
 	__typename: "LoginResponseDto",
@@ -1411,23 +1396,21 @@ export type GraphQLTypes = {
 	refreshToken: string,
 	['...on LoginResponseDto']: Omit<GraphQLTypes["LoginResponseDto"], "...on LoginResponseDto">
 };
-	["Mutation"]: {
-	__typename: "Mutation",
-	changeMyPassword: GraphQLTypes["SuccessDto"],
-	changePassword: GraphQLTypes["SuccessDto"],
-	createUser: GraphQLTypes["UserModel"],
-	deleteUser: GraphQLTypes["SuccessDto"],
-	logIn: GraphQLTypes["LoginResponseDto"],
-	logout: GraphQLTypes["SuccessDto"],
-	refreshToken: GraphQLTypes["LoginResponseDto"],
-	register: GraphQLTypes["LoginResponseDto"],
-	updateMe: GraphQLTypes["UserModel"],
-	updateUser: GraphQLTypes["UserModel"],
-	['...on Mutation']: Omit<GraphQLTypes["Mutation"], "...on Mutation">
+	["UserModel"]: {
+	__typename: "UserModel",
+	id: GraphQLTypes["ID"],
+	name: string,
+	username: string,
+	active: boolean,
+	role: GraphQLTypes["Role"],
+	['...on UserModel']: Omit<GraphQLTypes["UserModel"], "...on UserModel">
 };
-	["PaginationDto"]: {
-		skip?: number | undefined | null,
-	take?: number | undefined | null
+	["Role"]: Role;
+	["ReadUserResponseDto"]: {
+	__typename: "ReadUserResponseDto",
+	count: number,
+	data: Array<GraphQLTypes["UserModel"]>,
+	['...on ReadUserResponseDto']: Omit<GraphQLTypes["ReadUserResponseDto"], "...on ReadUserResponseDto">
 };
 	["Query"]: {
 	__typename: "Query",
@@ -1435,55 +1418,72 @@ export type GraphQLTypes = {
 	readUsers: GraphQLTypes["ReadUserResponseDto"],
 	['...on Query']: Omit<GraphQLTypes["Query"], "...on Query">
 };
-	["ReadUserResponseDto"]: {
-	__typename: "ReadUserResponseDto",
-	count: number,
-	data: Array<GraphQLTypes["UserModel"]>,
-	['...on ReadUserResponseDto']: Omit<GraphQLTypes["ReadUserResponseDto"], "...on ReadUserResponseDto">
-};
 	["ReadUserWhereRequestDto"]: {
-		active?: boolean | undefined | null,
-	id?: GraphQLTypes["ID"] | undefined | null,
+		id?: GraphQLTypes["ID"] | undefined | null,
+	username?: string | undefined | null,
 	name?: string | undefined | null,
 	role?: GraphQLTypes["Role"] | undefined | null,
-	username?: string | undefined | null
+	active?: boolean | undefined | null
 };
-	["RefreshTokenRequestDto"]: {
-		refreshToken: string
+	["PaginationDto"]: {
+		take?: number | undefined | null,
+	skip?: number | undefined | null
+};
+	["SortByDto"]: {
+		field?: string | undefined | null,
+	descending?: boolean | undefined | null
+};
+	["Mutation"]: {
+	__typename: "Mutation",
+	logIn: GraphQLTypes["LoginResponseDto"],
+	register: GraphQLTypes["LoginResponseDto"],
+	logout: GraphQLTypes["SuccessDto"],
+	changePassword: GraphQLTypes["SuccessDto"],
+	changeMyPassword: GraphQLTypes["SuccessDto"],
+	refreshToken: GraphQLTypes["LoginResponseDto"],
+	updateMe: GraphQLTypes["UserModel"],
+	createUser: GraphQLTypes["UserModel"],
+	updateUser: GraphQLTypes["UserModel"],
+	deleteUser: GraphQLTypes["SuccessDto"],
+	['...on Mutation']: Omit<GraphQLTypes["Mutation"], "...on Mutation">
+};
+	["LoginRequestDto"]: {
+		username: string,
+	password: string
 };
 	["RegisterRequestDto"]: {
 		name: string,
-	password: string,
-	username: string
+	username: string,
+	password: string
 };
-	["Role"]: Role;
-	["SortByDto"]: {
-		descending?: boolean | undefined | null,
-	field?: string | undefined | null
+	["ChangePasswordRequestDto"]: {
+		newPassword: string
 };
-	["SuccessDto"]: {
-	__typename: "SuccessDto",
-	success: boolean,
-	['...on SuccessDto']: Omit<GraphQLTypes["SuccessDto"], "...on SuccessDto">
+	["IdDto"]: {
+		id: string
+};
+	["ChangeMyPasswordRequestDto"]: {
+		currentPassword: string,
+	newPassword: string
+};
+	["RefreshTokenRequestDto"]: {
+		refreshToken: string
 };
 	["UpdateMeRequestDto"]: {
 		name?: string | undefined | null,
 	username?: string | undefined | null
 };
-	["UpdateUserRequestDataDto"]: {
-		active: boolean,
-	name: string,
-	role?: GraphQLTypes["Role"] | undefined | null,
-	username: string
-};
-	["UserModel"]: {
-	__typename: "UserModel",
-	active: boolean,
-	id: GraphQLTypes["ID"],
-	name: string,
-	role: GraphQLTypes["Role"],
+	["CreateUserRequestDto"]: {
+		name: string,
 	username: string,
-	['...on UserModel']: Omit<GraphQLTypes["UserModel"], "...on UserModel">
+	password: string,
+	role: GraphQLTypes["Role"]
+};
+	["UpdateUserRequestDataDto"]: {
+		username?: string | undefined | null,
+	active?: boolean | undefined | null,
+	role?: GraphQLTypes["Role"] | undefined | null,
+	name?: string | undefined | null
 };
 	["ID"]: "scalar" & { name: "ID" }
     }
@@ -1493,18 +1493,18 @@ export enum Role {
 }
 
 type ZEUS_VARIABLES = {
-	["ChangeMyPasswordRequestDto"]: ValueTypes["ChangeMyPasswordRequestDto"];
-	["ChangePasswordRequestDto"]: ValueTypes["ChangePasswordRequestDto"];
-	["CreateUserRequestDto"]: ValueTypes["CreateUserRequestDto"];
-	["IdDto"]: ValueTypes["IdDto"];
-	["LoginRequestDto"]: ValueTypes["LoginRequestDto"];
-	["PaginationDto"]: ValueTypes["PaginationDto"];
-	["ReadUserWhereRequestDto"]: ValueTypes["ReadUserWhereRequestDto"];
-	["RefreshTokenRequestDto"]: ValueTypes["RefreshTokenRequestDto"];
-	["RegisterRequestDto"]: ValueTypes["RegisterRequestDto"];
 	["Role"]: ValueTypes["Role"];
+	["ReadUserWhereRequestDto"]: ValueTypes["ReadUserWhereRequestDto"];
+	["PaginationDto"]: ValueTypes["PaginationDto"];
 	["SortByDto"]: ValueTypes["SortByDto"];
+	["LoginRequestDto"]: ValueTypes["LoginRequestDto"];
+	["RegisterRequestDto"]: ValueTypes["RegisterRequestDto"];
+	["ChangePasswordRequestDto"]: ValueTypes["ChangePasswordRequestDto"];
+	["IdDto"]: ValueTypes["IdDto"];
+	["ChangeMyPasswordRequestDto"]: ValueTypes["ChangeMyPasswordRequestDto"];
+	["RefreshTokenRequestDto"]: ValueTypes["RefreshTokenRequestDto"];
 	["UpdateMeRequestDto"]: ValueTypes["UpdateMeRequestDto"];
+	["CreateUserRequestDto"]: ValueTypes["CreateUserRequestDto"];
 	["UpdateUserRequestDataDto"]: ValueTypes["UpdateUserRequestDataDto"];
 	["ID"]: ValueTypes["ID"];
 }

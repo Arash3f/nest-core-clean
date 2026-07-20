@@ -1,3 +1,6 @@
+import { NodeEnv } from "@infrastructure/config/env.types"
+import { EnvConfigModule } from "@infrastructure/config/env-config.module"
+import { EnvConfigService } from "@infrastructure/config/env-config.service"
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { Module } from "@nestjs/common"
 import { GraphQLModule } from "@nestjs/graphql"
@@ -11,27 +14,32 @@ import type { GraphQLFormattedError } from "graphql"
   imports: [
     AuthGraphqlModule,
     UserGraphqlModule,
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: "schema.gql",
-      sortSchema: true,
-      context: ({ req, res }: { req: Request; res: Response }) => ({
-        req,
-        res,
+      imports: [EnvConfigModule],
+      inject: [EnvConfigService],
+      useFactory: (env: EnvConfigService) => ({
+        autoSchemaFile: "schema.gql",
+        sortSchema: true,
+        introspection: env.nodeEnv !== NodeEnv.Production,
+        context: ({ req, res }: { req: Request; res: Response }) => ({
+          req,
+          res,
+        }),
+        formatError: (formattedError: GraphQLFormattedError) => {
+          const originalError = formattedError.extensions?.originalError as
+            | ErrorResponseBody
+            | undefined
+
+          if (!originalError) return formattedError
+
+          return {
+            ...formattedError,
+            message: originalError.message,
+            extensions: originalError,
+          }
+        },
       }),
-      formatError: (formattedError: GraphQLFormattedError) => {
-        const originalError = formattedError.extensions?.originalError as
-          | ErrorResponseBody
-          | undefined
-
-        if (!originalError) return formattedError
-
-        return {
-          ...formattedError,
-          message: originalError.message,
-          extensions: originalError,
-        }
-      },
     }),
   ],
 })

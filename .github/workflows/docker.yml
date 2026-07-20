@@ -1,0 +1,107 @@
+name: Docker
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "docker/develop/**"
+      - "src/**"
+      - "src/infrastructure/orm/prisma/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/docker.yml"
+  push:
+    branches: [main, develop]
+    paths:
+      - "docker/develop/**"
+      - "src/**"
+      - "src/infrastructure/orm/prisma/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/docker.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docker:
+    name: Build & Run via Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Write postgres env file
+        run: |
+          cat > docker/develop/.docker.dev.env <<'EOF'
+          POSTGRES_USER=postgres
+          POSTGRES_PASSWORD=postgres
+          POSTGRES_DB=nest_clean_core
+          PGADMIN_DEFAULT_EMAIL=admin@example.com
+          PGADMIN_DEFAULT_PASSWORD=admin
+          EOF
+          # Strip accidental leading spaces from YAML-indented heredoc lines
+          sed -i 's/^[[:space:]]*//' docker/develop/.docker.dev.env
+
+      - name: Write app env file
+        run: |
+          cat > docker/develop/.env.docker.dev <<'EOF'
+          NODE_ENV=development
+          SERVER_ADDRESS=0.0.0.0
+          SERVER_PORT=3000
+          SWAGGER_DOCS_PATH=docs
+          SWAGGER_PATH=api_docs
+          CORS_ORIGINS=*
+          THROTTLE_TTL_MS=60000
+          THROTTLE_LIMIT=10
+          JWT_SECRET=ciDockerDevSecretXXXXXXXXXXXXXXXXXXXXXXXXXX
+          jwtAccessExpire=10000
+          jwtRefreshExpire=10000
+          DATABASE_CONNECTION_URL=postgres://postgres:postgres@postgres:5432/nest_clean_core
+          DATABASE_NAME=nest_clean_core
+          DATABASE_USERNAME=postgres
+          DATABASE_PASSWORD=postgres
+          DATABASE_PORT=5432
+          DATABASE_HOST=postgres
+          SEED_ON_BOOT=true
+          SUPER_USER_NAME=admin
+          SUPER_USER_USERNAME=admin
+          SUPER_USER_PASSWORD=admin
+          MEMBER_USER_NAME=member
+          MEMBER_USER_USERNAME=member
+          MEMBER_USER_PASSWORD=member
+          UPLOAD_DIR=uploads
+          PASSWORD_HASH_MEMORY_COST=65536
+          PASSWORD_HASH_TIME_COST=2
+          PASSWORD_HASH_PARALLELISM=1
+          EOF
+          sed -i 's/^[[:space:]]*//' docker/develop/.env.docker.dev
+
+      - name: Build and start containers
+        run: docker compose -f docker/develop/docker-compose-develop.yml up -d --build
+
+      - name: Wait for app to become healthy
+        run: |
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:3006/health > /dev/null; then
+              echo "App responded successfully"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "App did not become healthy in time"
+          docker compose -f docker/develop/docker-compose-develop.yml logs app
+          exit 1
+
+      - name: Show container logs
+        if: always()
+        run: docker compose -f docker/develop/docker-compose-develop.yml logs
+
+      - name: Tear down containers
+        if: always()
+        run: docker compose -f docker/develop/docker-compose-develop.yml down -v

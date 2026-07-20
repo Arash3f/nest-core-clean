@@ -8,22 +8,25 @@ import { IsBoolean, IsEnum, IsOptional, IsString, ValidateNested } from "class-v
  * Data transfers object to Update User
  */
 export class UpdateUserRequestDataDto {
-  @ApiProperty({ type: String })
+  @ApiPropertyOptional({ type: String })
+  @IsOptional()
   @IsString()
-  username: string
+  username?: string
 
-  @ApiProperty({ type: Boolean })
+  @ApiPropertyOptional({ type: Boolean })
+  @IsOptional()
   @IsBoolean()
-  active: boolean
+  active?: boolean
 
   @ApiPropertyOptional({ enum: Role })
   @IsEnum(Role)
   @IsOptional()
   role?: Role
 
-  @ApiProperty({ type: String })
+  @ApiPropertyOptional({ type: String })
+  @IsOptional()
   @IsString()
-  name: string
+  name?: string
 }
 
 /**

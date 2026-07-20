@@ -1,0 +1,5 @@
+# Keep generated GraphQL artifacts LF so CI Zeus regeneration matches
+schema.gql text eol=lf
+tests/utils/graphql/** text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf

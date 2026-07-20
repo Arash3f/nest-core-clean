@@ -132,12 +132,7 @@ export class GraphqlTestApiCaller {
     })
   }
 
-  private async seedUser(user: {
-    name: string
-    username: string
-    password: string
-    role: Role
-  }) {
+  private async seedUser(user: { name: string; username: string; password: string; role: Role }) {
     await this.prisma.user.create({
       data: {
         name: user.name,

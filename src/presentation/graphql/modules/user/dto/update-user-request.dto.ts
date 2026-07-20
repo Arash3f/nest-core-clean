@@ -4,20 +4,23 @@ import { IsBoolean, IsEnum, IsOptional, IsString } from "class-validator"
 
 @InputType()
 export class UpdateUserRequestDataDto {
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsString()
-  username: string
+  username?: string
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { nullable: true })
+  @IsOptional()
   @IsBoolean()
-  active: boolean
+  active?: boolean
 
   @Field(() => Role, { nullable: true })
   @IsOptional()
   @IsEnum(Role)
   role?: Role
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsString()
-  name: string
+  name?: string
 }

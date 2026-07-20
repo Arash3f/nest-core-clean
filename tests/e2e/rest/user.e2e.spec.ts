@@ -359,7 +359,7 @@ describe("User (REST e2e)", () => {
       expect(data).toMatchObject({
         statusCode: 400,
         code: 9999,
-        module: "AppModule",
+        module: "DomainModule",
       })
     })
 
@@ -373,7 +373,7 @@ describe("User (REST e2e)", () => {
       expect(data).toMatchObject({
         statusCode: 400,
         code: 9999,
-        module: "AppModule",
+        module: "DomainModule",
       })
     })
 
@@ -384,7 +384,7 @@ describe("User (REST e2e)", () => {
       expect(data).toMatchObject({
         statusCode: 400,
         code: 9999,
-        module: "AppModule",
+        module: "DomainModule",
       })
     })
 
@@ -395,7 +395,7 @@ describe("User (REST e2e)", () => {
       expect(data).toMatchObject({
         statusCode: 400,
         code: 9999,
-        module: "AppModule",
+        module: "DomainModule",
       })
     })
   })

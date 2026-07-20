@@ -71,10 +71,10 @@ jobs:
           SEED_ON_BOOT=true
           SUPER_USER_NAME=admin
           SUPER_USER_USERNAME=admin
-          SUPER_USER_PASSWORD=admin
+          SUPER_USER_PASSWORD=admin1234
           MEMBER_USER_NAME=member
           MEMBER_USER_USERNAME=member
-          MEMBER_USER_PASSWORD=member
+          MEMBER_USER_PASSWORD=member1234
           UPLOAD_DIR=uploads
           PASSWORD_HASH_MEMORY_COST=65536
           PASSWORD_HASH_TIME_COST=2

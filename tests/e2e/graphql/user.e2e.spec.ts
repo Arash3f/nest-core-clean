@@ -397,7 +397,7 @@ describe("User (GraphQL e2e)", () => {
         expect(extractGraphqlError(err)).toMatchObject({
           statusCode: 400,
           code: 9999,
-          module: "AppModule",
+          module: "DomainModule",
         })
       }
     }
